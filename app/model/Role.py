@@ -54,32 +54,45 @@ class Role(db.Model):
         db.session.commit()
     
     #刪除角色
+    @staticmethod
     def delete_role(role):
         db.session.delete(role)
         db.session.commit()
 
     #給定查詢條件查詢角色資料
+    @staticmethod
     def get_list(start=0, maxRows=5, dir=False, sort='id', id=0, name=None, isEnable=None):
 
         role = Role.query
         if id != 0 :
             role = role.filter(Role.id == id)
         if name is not None :
-            role = role.filter(Role.name == name)
+            role = role.filter(Role.name.like( "%" + name + "%"))
         if isEnable is not None :
             role = role.filter(Role.isEnable == isEnable)
 
         return role.order_by(Role.id).limit(maxRows).offset(start)
     
+    #利用ID 查詢角色資料
+    @staticmethod
     def get_list_size(id=0, name=None, isEnable=None) :
         role = Role.query
         if id != 0 :
             role = role.filter(Role.id == id)
         if name is not None :
-            role = role.filter(Role.name == name)
+            role = role.filter(Role.name.like( "%" + name + "%"))
         if isEnable is not None :
             role = role.filter(Role.isEnable == isEnable)
         return len(role.all())
+
+
+    #利用ID 查詢角色資料
+    @staticmethod
+    def is_name_exist(name):
+        return Role.query.filter(Role.name == name).first() is not None
+
+
+
 
 
 

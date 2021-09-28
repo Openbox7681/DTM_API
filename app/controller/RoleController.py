@@ -32,7 +32,7 @@ class QueryRole(Resource):
             .add_argument("Sort", type=bool, location='json', required=False) \
             .parse_args()
         id = 0 if args["Id"] is None else args["Id"]
-        name = None if args["Name"] is None else args["None"]
+        name = None if args["Name"] is None else args["Name"]
         isEnable = True if args["IsEnable"] is None else args["IsEnable"]  
         start = 1 if args["Start"] is None else args["Start"]
         maxRows = 1 if args["MaxRows"] is None else args["MaxRows"]
@@ -41,6 +41,7 @@ class QueryRole(Resource):
         roles = Role.get_list(start, maxRows, dir, sort , id, name, isEnable)
         total = Role.get_list_size(id,name,isEnable)
         data = list()
+
         if roles is not None :
             status = 200
             message = "success"
@@ -76,14 +77,13 @@ class QueryRoleById(Resource):
     def post(self):
         code = None
         message = None
-        total = 0
         data = dict()
         args = reqparse.RequestParser() \
             .add_argument("Id", type=str, location='json', required=False) \
             .parse_args()
         id = 0 if args["Id"] is None else args["Id"]
 
-        role = get_role(id)
+        role = Role.get_role(id)
         if role is not None:
             status = 200
             message = "success"
@@ -100,12 +100,11 @@ class QueryRoleById(Resource):
         else : 
             status = 201
             message = "QueryError"
-            
+
         return jsonify({
             "Status": status,
             "Message": message,
-            "Data" : data,
-            "Total" : total
+            "Data" : data
         })
 
 

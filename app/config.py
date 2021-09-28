@@ -4,7 +4,8 @@ import os
 class Config:
     # flask
     DEBUG = os.environ.get('FLASK_DEBUG') or True
-
+    TESTING = True
+    ENV = 'development'
     # database
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql+pymysql://root:root123@59.127.199.98:3306/DTM'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
