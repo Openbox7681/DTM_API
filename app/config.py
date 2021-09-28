@@ -6,7 +6,7 @@ class Config:
     DEBUG = os.environ.get('FLASK_DEBUG') or True
 
     # database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql+pymysql://root:toor@localhost/flask'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql+pymysql://root:root123@59.127.199.98:3306/DTM'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # jwt
