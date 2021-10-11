@@ -6,6 +6,9 @@ from app.model.Role import Role
 from datetime import datetime
 
 from app import jwt
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
@@ -16,7 +19,7 @@ def expired_token_callback(jwt_header, jwt_payload):
     })
 
 
-class QueryRole(Resource):
+class QueryUser(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -26,39 +29,45 @@ class QueryRole(Resource):
         status = None
         args = reqparse.RequestParser() \
             .add_argument("Id", type=str, location='json', required=False) \
-            .add_argument("Name", type=str, location='json', required=False) \
+            .add_argument("Account", type=str, location='json', required=False) \
             .add_argument("IsEnable", type=bool, location='json', required=False) \
+            .add_argument("RoleId", type=str, location='json', required=False) \
             .add_argument("Start", type=str, location='json', required=False) \
             .add_argument("MaxRows", type=str, location='json', required=False) \
             .add_argument("Dir", type=bool, location='json', required=False) \
             .add_argument("Sort", type=bool, location='json', required=False) \
             .parse_args()
         id = 0 if args["Id"] is None else args["Id"]
-        name = None if args["Name"] is None else args["Name"]
-        isEnable = True if args["IsEnable"] is None else args["IsEnable"]  
+        account = None if args["Account"] is None else args["Account"]
+        isEnable = True if args["IsEnable"] is None else args["IsEnable"] 
+        roleId = None if args["RoleId"] is None else args["RoleId"] 
         start = 1 if args["Start"] is None else args["Start"]
         maxRows = 1 if args["MaxRows"] is None else args["MaxRows"]
         dir = False if args["Dir"] is None else args["Dir"]
         sort = 'id'if args["Sort"] is None else args["Sort"]
-        roles = Role.get_list(start, maxRows, dir, sort , id, name, isEnable)
-        total = Role.get_list_size(id,name,isEnable)
+        
+        users = User.get_list(start, maxRows, dir, sort , id, account, isEnable, roleId)
+        
+        total = User.get_list_size(id,account,isEnable,roleId)
         data = list()
 
-        if roles is not None :
+        if users is not None :
             status = 200
             message = "success"
-            for role in roles :
+            for user in users :
                 datatable = dict()
 
                 datatable = {
-                        "Id": role.id,
-                        "Name": role.name,
-                        "IsEnable" : role.isEnable , 
-                        "Sort" : role.sort,
-                        "CreateId" : role.createId,
-                        "CreateTime" : role.createTime.strftime("%m-%d-%Y %H:%M:%S"),
-                        "ModifyId" : role.modifyId,
-                        "ModifyTime" : role.modifyTime.strftime("%m-%d-%Y %H:%M:%S")
+                        "Id": user.id,
+                        "Account": user.account,
+                        "Email" : user.email,
+                        "IsEnable" : user.isEnable , 
+                        "RoleId" : user.id_role,
+                        "RoleName" :  user.role.name,
+                        "CreateId" : user.createId,
+                        "CreateTime" : user.createTime.strftime("%m-%d-%Y %H:%M:%S"),
+                        "ModifyId" : user.modifyId,
+                        "ModifyTime" : user.modifyTime.strftime("%m-%d-%Y %H:%M:%S")
                     }
                 data.append(datatable)
         else : 
@@ -72,7 +81,7 @@ class QueryRole(Resource):
             "Total" : total
         })
 
-class QueryRoleById(Resource):
+class QueryUserById(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -85,23 +94,25 @@ class QueryRoleById(Resource):
             .parse_args()
         id = 0 if args["Id"] is None else args["Id"]
 
-        role = Role.get_role(id)
-        if role is not None:
+        user = User.get_users_by_id(id)
+        if user is not None:
             status = 200
             message = "success"
             data = {
-                        "Id": role.id,
-                        "Name": role.name,
-                        "IsEnable" : role.isEnable , 
-                        "Sort" : role.sort,
-                        "CreateId" : role.createId,
-                        "CreateTime" : role.createTime.strftime("%m-%d-%Y %H:%M:%S"),
-                        "ModifyId" : role.modifyId,
-                        "ModifyTime" : role.modifyTime.strftime("%m-%d-%Y %H:%M:%S")
+                        "Id": user.id,
+                        "Account": user.account,
+                        "Email" : user.email,
+                        "RoleId" : user.id_role,
+                        "RoleName" : user.role.name,
+                        "IsEnable" : user.isEnable , 
+                        "CreateId" : user.createId,
+                        "CreateTime" : user.createTime.strftime("%m-%d-%Y %H:%M:%S"),
+                        "ModifyId" : user.modifyId,
+                        "ModifyTime" : user.modifyTime.strftime("%m-%d-%Y %H:%M:%S")
                     }
         else : 
             status = 201
-            message = "查無此角色Id"
+            message = "查無詞角色Id"
 
         return jsonify({
             "Status": status,
@@ -110,7 +121,7 @@ class QueryRoleById(Resource):
         })
         
 
-class CreateRole(Resource):
+class CreateUser(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -122,37 +133,46 @@ class CreateRole(Resource):
 
         
         args = reqparse.RequestParser() \
-            .add_argument("Name", type=str, location='json', required=False) \
+            .add_argument("Account", type=str, location='json', required=False) \
             .add_argument("IsEnable", type=bool, location='json', required=False) \
-            .add_argument("Sort", type=int, location='json', required=False) \
+            .add_argument("Email", type=str, location='json', required=False) \
+            .add_argument("Password", type=str, location='json', required=False) \
+            .add_argument("RoleId", type=str, location='json', required=False) \
             .parse_args()
             
-        name = None if args["Name"] is None else args["Name"]
-        isEnable = True if args["IsEnable"] is None else args["IsEnable"]
-        sort = 1 if args["Sort"] is None else args["Sort"] 
+        account = None if args["Account"] is None else args["Account"]
+        isEnable = False if args["IsEnable"] is None else args["IsEnable"]
+        email = None if args["Email"] is None else args["Email"]
+        roleId = 1 if args["RoleId"] is None else args["RoleId"] 
+        password = None if args["Password"] is None else args["Password"]
+        
+        hashed_password = bcrypt.generate_password_hash(password=password)
 
 
-        if name is not None :
-            if Role.is_name_exist(name):
+        if account is not None and password is not None:
+            if User.is_user_exist_by_account(account):
                 status = 200 
-                message = "角色名稱已存在"
+                message = "帳戶名稱已存在"
             else:
-                role = Role(
-                    name= name,
+                user = User(
+                    account= account,
                     isEnable = isEnable, 
-                    sort = sort, 
+                    enableTime = datetime.now(),
+                    password = hashed_password,
+                    email = email,
+                    id_role = roleId,
                     createId =  createId , 
                     createTime = datetime.now(),
                     modifyId = createId ,
                     modifyTime = datetime.now()  
                     )
-                role = Role.insert_role(role)
+                user = User.insert_user(user)
                 
-                if role is not None :
+                if user is not None :
                     status = 200 
                     message = "新增資料成功"
                     data = {
-                    "Id" : role.id
+                    "Id" : user.id
                 }   
                 else :
                     status = 200 
@@ -160,7 +180,7 @@ class CreateRole(Resource):
                          
         else :
             status = 201
-            message = "名字不能為空"      
+            message = "帳戶名字或密碼不能為空"      
         
         return jsonify({
             "Status": status,
@@ -169,7 +189,7 @@ class CreateRole(Resource):
         })
     
     
-class UpdateRole(Resource):
+class UpdateUser(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -177,44 +197,59 @@ class UpdateRole(Resource):
         message = None
         status = None
         data = None
-        
         modifyId = get_jwt_identity()
+        
         
         args = reqparse.RequestParser() \
             .add_argument("Id", type=int, location='json', required=False) \
-            .add_argument("Name", type=str, location='json', required=False) \
+            .add_argument("Account", type=str, location='json', required=False) \
+            .add_argument("Email", type=str, location='json', required=False) \
+            .add_argument("Password", type=str, location='json', required=False) \
+            .add_argument("RoleId", type=str, location='json', required=False) \
             .add_argument("IsEnable", type=bool, location='json', required=False) \
-            .add_argument("Sort", type=int, location='json', required=False) \
             .parse_args()
             
         id = None if args["Id"] is None else args["Id"]
-        name = None if args["Name"] is None else args["Name"]
-        isEnable = True if args["IsEnable"] is None else args["IsEnable"]
-        sort = 1 if args["Sort"] is None else args["Sort"]
+        account = None if args["Account"] is None else args["Account"]
+        email = None if args["Email"] is None else args["Email"]
+        roleId = 0 if args["RoleId"] is None else args["RoleId"] 
+        isEnable = False if args["IsEnable"] is None else args["IsEnable"]
+        password = None if args["Password"] is None else args["Password"]
         
-        role = Role.get_role(id)
+        hashed_password = bcrypt.generate_password_hash(password=password)
         
+        user = User.get_users_by_id(id)
         
-        if role is not None :
-            role.isEnable = isEnable
-            role.name = name
-            role.sort = sort
-            role.modifyTime = datetime.now() 
-            role.modifyId = modifyId
-            role = Role.update_role(role)
-            if role is not None :
-                status = 200 
-                message = "更新資料成功"
-                data = {
-                    "Id" : role.id
-                }   
+        if account is not None and hashed_password is not None:
+            if user is not None :
+                if isEnable:
+                    user.isEnable = isEnable
+                    user.enableTime = datetime.now() 
+                if account is not None :
+                    user.account = account
+                if email is not None :
+                    user.email = email
+                if roleId != 0:
+                    user.id_role = roleId
+                user.password = hashed_password
+                user.modifyTime = datetime.now() 
+                user.modifyId = modifyId
+                user = User.update_user(user)
+                if user is not None :
+                    status = 200 
+                    message = "更新資料成功"
+                    data = {
+                        "Id" : user.id
+                    }   
+                else :
+                    status = 200 
+                    message = "更新資料失敗"    
             else :
-                status = 200 
-                message = "更新資料失敗"    
+                status = 201
+                message = "查無此帳號ID"
         else :
             status = 201
-            message = "查無此角色ID"
-            
+            message = "帳戶名字或密碼不能為空"      
         
         return jsonify({
             "Status": status,
@@ -223,7 +258,7 @@ class UpdateRole(Resource):
         })
         
         
-class DeleteRole(Resource):
+class DeleteUser(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -238,10 +273,10 @@ class DeleteRole(Resource):
         id = 0 if args["Id"] is None else args["Id"]
 
 
-        if Role.is_id_exist(id):
-            role = Role.get_role(id)
+        if User.is_user_exist_by_id(id):
+            user = User.get_users_by_id(id)
             try:
-                Role.delete_role(role)
+                User.delete_user(user)
                 status = 200
                 message= '刪除成功'
                 
@@ -257,7 +292,7 @@ class DeleteRole(Resource):
                 }  
         else:
             status = 201
-            message= '查無此角色Id'
+            message= '查無此帳號Id'
             data = {
                     "Id" : id
                 }  

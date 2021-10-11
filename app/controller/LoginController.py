@@ -8,10 +8,11 @@ from app import jwt
 
 
 @jwt.expired_token_loader
-def expired_token_callback():
+def expired_token_callback(jwt_header, jwt_payload):
     return jsonify({
         'code': 201,
         'message': "token expired"
+        # 'msg' : jwt_payload
     })
 
 
@@ -45,11 +46,13 @@ class Login(Resource):
             message = "success"
             token = create_access_token(identity=user.id)
             id = user.id
+            account = user.account
             roleId =  user.id_role
             roleName = user.role.name
 
             data = {
                 "Token": token,
+                "Account" : account,
                 "Id": id,
                 "RoleId" : roleId , 
                 "RoleName" : roleName
@@ -120,12 +123,6 @@ class Users(Resource):
             "Message": message,
             "Data" : data
         })
-
-
-
-
-
-
 
 
     @jwt_required()

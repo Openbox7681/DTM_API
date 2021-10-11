@@ -68,26 +68,46 @@ class Role(db.Model):
         self.modifyId = modifyId
         self.modifyTime = modifyTime
 
-
+#建立初始schema
 db.create_all()
 
 
 
+#==================================#
 
 
-# hash_password = hashlib.sha256(b"123456").hexdigest()
-# user = User(username="admin1@gmail.com", password=hash_password)
+##新增admin 角色資料與一般使用者
 
-# role = Role(
-#     name= "User",
-#     isEnable = True, 
-#     sort = 2, 
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now()
-#     )
 
+AdminRole = Role(
+    name= "SuperAdmin",
+    isEnable = True, 
+    sort = 1, 
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now()
+    )
+
+UserRole = Role(
+    name= "User",
+    isEnable = True, 
+    sort = 2, 
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now()
+    )
+
+
+db.session.add(AdminRole)
+db.session.add(UserRole)
+
+
+
+#==================================#
+
+##新增 user 帳號角色資料與一般使用者帳號
 
 
 password='123'
@@ -104,8 +124,26 @@ user = User(account="user01",
             id_role=2
             )
 
-# db.session.add(role)
+
+admin = User(account="SuperAdmin", 
+            password=hashed_password, 
+            email = "admin@gmail",
+            isEnable = True, 
+            enableTime = datetime.now(), 
+            createId = 1 , 
+            createTime = datetime.now(),
+            modifyId = 1,
+            modifyTime = datetime.now(),
+            id_role=1
+            )
+
 db.session.add(user)
+db.session.add(admin)
+
+
+#==================================#
+
+
 
 
 

@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 #角色資料管理
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(45), nullable=False)
+    name = db.Column(db.String(45), nullable=False, unique=True)
     isEnable = db.Column(db.Boolean, nullable=False)
     sort = db.Column(db.Integer, default=True, nullable=False)
     createId = db.Column(db.Integer, nullable=False)
@@ -14,7 +14,7 @@ class Role(db.Model):
 
     #一對一
     #通過 relationship 與User 雙向綁定
-    list_user = db.relationship("User" , backref= "role")
+    list_user = db.relationship("User" , backref= "role", cascade='save-update,delete')
 
     #一對多 一
     #通過 relationship 與 role form 綁定資料
@@ -46,12 +46,14 @@ class Role(db.Model):
     def insert_role(role):
         db.session.add(role)
         db.session.commit()
+        return role 
 
     #角色資料更新
     @staticmethod
     def update_role(role):
         db.session.merge(role)
         db.session.commit()
+        return role
     
     #刪除角色
     @staticmethod
@@ -88,8 +90,8 @@ class Role(db.Model):
 
     #利用ID 查詢角色資料
     @staticmethod
-    def is_name_exist(name):
-        return Role.query.filter(Role.name == name).first() is not None
+    def is_id_exist(id):
+        return Role.query.filter(Role.id == id).first() is not None
 
 
 

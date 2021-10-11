@@ -1,8 +1,8 @@
 import logging.config
 from app import api
 from app.controller.LoginController import Login, Users
-from app.controller.RoleController import QueryRole, QueryRoleById
-
+from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
+from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 
 logging.config.dictConfig(
     {
@@ -74,5 +74,43 @@ api.add_resource(QueryRole, '/roles/query', resource_class_kwargs={
 api.add_resource(QueryRoleById, '/roles/query/id', resource_class_kwargs={
     'logger': logging.getLogger('/roles/query/id')
 })
+
+api.add_resource(CreateRole, '/roles/create', resource_class_kwargs={
+    'logger': logging.getLogger('/roles/create')
+})
+
+api.add_resource(UpdateRole, '/roles/update', resource_class_kwargs={
+    'logger': logging.getLogger('/roles/update')
+})
+
+api.add_resource(DeleteRole, '/roles/delete', resource_class_kwargs={
+    'logger': logging.getLogger('/roles/delete')
+})
+
+#帳戶相關
+
+api.add_resource(QueryUser, '/account/query', resource_class_kwargs={
+    'logger': logging.getLogger('/account')
+})
+
+api.add_resource(QueryUserById, '/account/query/id', resource_class_kwargs={
+    'logger': logging.getLogger('/account/query/id')
+})
+
+api.add_resource(CreateUser, '/account/create', resource_class_kwargs={
+    'logger': logging.getLogger('/account/create')
+})
+
+api.add_resource(UpdateUser, '/account/update', resource_class_kwargs={
+    'logger': logging.getLogger('/account/update')
+})
+
+api.add_resource(DeleteUser, '/account/delete', resource_class_kwargs={
+    'logger': logging.getLogger('/account/delete')
+})
+
+
+
+
 
 
