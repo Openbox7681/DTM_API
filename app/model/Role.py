@@ -18,7 +18,7 @@ class Role(db.Model):
 
     #一對多 一
     #通過 relationship 與 role form 綁定資料
-    # db_role_roleForm = db.relationship("RoleForm", backref="role")
+    db_role_roleForm = db.relationship("RoleForm", backref="role")
 
 
 
@@ -33,6 +33,7 @@ class Role(db.Model):
 
     
     #利用id 取得角色資料
+    @staticmethod
     def get_role(id):
         return Role.query.filter(Role.id == id).first()
 
@@ -92,6 +93,11 @@ class Role(db.Model):
     @staticmethod
     def is_id_exist(id):
         return Role.query.filter(Role.id == id).first() is not None
+    
+    #角色名稱是否存在
+    @staticmethod
+    def is_name_exist(name):
+        return Role.query.filter(Role.name == name).first() is not None
 
 
 

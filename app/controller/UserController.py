@@ -112,7 +112,7 @@ class QueryUserById(Resource):
                     }
         else : 
             status = 201
-            message = "查無詞角色Id"
+            message = "查無此角色Id"
 
         return jsonify({
             "Status": status,
@@ -146,12 +146,12 @@ class CreateUser(Resource):
         roleId = 1 if args["RoleId"] is None else args["RoleId"] 
         password = None if args["Password"] is None else args["Password"]
         
-        hashed_password = bcrypt.generate_password_hash(password=password)
 
 
         if account is not None and password is not None:
+            hashed_password = bcrypt.generate_password_hash(password=password)
             if User.is_user_exist_by_account(account):
-                status = 200 
+                status = 202
                 message = "帳戶名稱已存在"
             else:
                 user = User(

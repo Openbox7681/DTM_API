@@ -134,7 +134,7 @@ class CreateRole(Resource):
 
         if name is not None :
             if Role.is_name_exist(name):
-                status = 200 
+                status = 202 
                 message = "角色名稱已存在"
             else:
                 role = Role(
@@ -196,21 +196,25 @@ class UpdateRole(Resource):
         
         
         if role is not None :
-            role.isEnable = isEnable
-            role.name = name
-            role.sort = sort
-            role.modifyTime = datetime.now() 
-            role.modifyId = modifyId
-            role = Role.update_role(role)
-            if role is not None :
-                status = 200 
-                message = "更新資料成功"
-                data = {
-                    "Id" : role.id
-                }   
-            else :
-                status = 200 
-                message = "更新資料失敗"    
+            if Role.is_name_exist(name):
+                status = 202 
+                message = "角色名稱已存在"
+            else:
+                role.isEnable = isEnable
+                role.name = name
+                role.sort = sort
+                role.modifyTime = datetime.now() 
+                role.modifyId = modifyId
+                role = Role.update_role(role)
+                if role is not None :
+                    status = 200 
+                    message = "更新資料成功"
+                    data = {
+                        "Id" : role.id
+                    }   
+                else :
+                    status = 200 
+                    message = "更新資料失敗"    
         else :
             status = 201
             message = "查無此角色ID"

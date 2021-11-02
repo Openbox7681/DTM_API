@@ -33,8 +33,15 @@ class Login(Resource):
             .add_argument('account', type=str, location='json', required=True, help="用戶名不能為空") \
             .add_argument("password", type=str, location='json', required=True, help="密碼不能為空") \
             .parse_args()
-
-        flag_user_exist, flag_password_correct, user = User.authenticate(args['account'], args['password'])
+        flag_user_exist = False
+        flag_password_correct = False
+            
+        try:
+            flag_user_exist, flag_password_correct, user = User.authenticate(args['account'], args['password'])
+        except Exception as e :
+            print(str(e))
+            status = 500
+            message = "user not exist"
         if not flag_user_exist:
             status = 201
             message = "user not exist"
