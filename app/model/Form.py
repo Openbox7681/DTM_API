@@ -56,8 +56,8 @@ class Form(db.Model):
     
     #刪除表單資料
     @staticmethod
-    def delete_role(role):
-        db.session.delete(role)
+    def delete_form(form):
+        db.session.delete(form)
         db.session.commit()
         
         

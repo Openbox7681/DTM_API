@@ -3,6 +3,7 @@ from app import api
 from app.controller.LoginController import Login, Users
 from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
+from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
 
 logging.config.dictConfig(
     {
@@ -110,7 +111,26 @@ api.add_resource(DeleteUser, '/account/delete', resource_class_kwargs={
 })
 
 
+#表單相關
+api.add_resource(QueryForm, '/form/query', resource_class_kwargs={
+    'logger': logging.getLogger('/form')
+})
 
+api.add_resource(QueryFormById, '/form/query/id', resource_class_kwargs={
+    'logger': logging.getLogger('/form/id')
+})
+
+api.add_resource(CreateForm, '/form/create', resource_class_kwargs={
+    'logger': logging.getLogger('/form/create')
+})
+
+api.add_resource(UpdateForm, '/form/update', resource_class_kwargs={
+    'logger': logging.getLogger('/form/update')
+})
+
+api.add_resource(DeleteForm, '/form/delete', resource_class_kwargs={
+    'logger': logging.getLogger('/form/delete')
+})
 
 
 

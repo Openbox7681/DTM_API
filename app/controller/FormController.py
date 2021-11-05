@@ -4,6 +4,7 @@ from flask_jwt_extended import create_access_token, jwt_required ,get_jwt_identi
 from app.model.User import User
 from app.model.Role import Role
 from app.model.Form import Form
+from app.model.RoleForm import RoleForm
 from datetime import datetime
 
 from app import jwt
@@ -54,9 +55,16 @@ class QueryForm(Resource):
             for form in forms :
                 datatable = dict()
 
+                # roleFormTable = form.db_form_roleForm
+                # for roleForm in roleFormTable:
+                #     print(roleForm.id)
+                #     print(roleForm.role.name)
+
+
                 datatable = {
                         "Id": form.id,
                         "Name": form.name,
+                        "Code" : form.code,
                         "IsEnable" : form.isEnable , 
                         "CreateId" : form.createId,
                         "CreateTime" : form.createTime.strftime("%m-%d-%Y %H:%M:%S"),
@@ -75,7 +83,7 @@ class QueryForm(Resource):
             "Total" : total
         })
 
-class QueryRoleById(Resource):
+class QueryFormById(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -88,23 +96,23 @@ class QueryRoleById(Resource):
             .parse_args()
         id = 0 if args["Id"] is None else args["Id"]
 
-        role = Role.get_role(id)
-        if role is not None:
+        form = Form.get_form(id)
+        if form is not None:
             status = 200
             message = "success"
             data = {
-                        "Id": role.id,
-                        "Name": role.name,
-                        "IsEnable" : role.isEnable , 
-                        "Sort" : role.sort,
-                        "CreateId" : role.createId,
-                        "CreateTime" : role.createTime.strftime("%m-%d-%Y %H:%M:%S"),
-                        "ModifyId" : role.modifyId,
-                        "ModifyTime" : role.modifyTime.strftime("%m-%d-%Y %H:%M:%S")
+                        "Id": form.id,
+                        "Name": form.name,
+                        "Code" : form.code,
+                        "IsEnable" : form.isEnable, 
+                        "CreateId" : form.createId,
+                        "CreateTime" : form.createTime.strftime("%m-%d-%Y %H:%M:%S"),
+                        "ModifyId" : form.modifyId,
+                        "ModifyTime" : form.modifyTime.strftime("%m-%d-%Y %H:%M:%S")
                     }
         else : 
             status = 201
-            message = "查無此角色Id"
+            message = "查無此表單Id"
 
         return jsonify({
             "Status": status,
@@ -113,7 +121,7 @@ class QueryRoleById(Resource):
         })
         
 
-class CreateRole(Resource):
+class CreateForm(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -127,35 +135,35 @@ class CreateRole(Resource):
         args = reqparse.RequestParser() \
             .add_argument("Name", type=str, location='json', required=False) \
             .add_argument("IsEnable", type=bool, location='json', required=False) \
-            .add_argument("Sort", type=int, location='json', required=False) \
+            .add_argument("Code", type=str, location='json', required=False) \
             .parse_args()
             
         name = None if args["Name"] is None else args["Name"]
         isEnable = True if args["IsEnable"] is None else args["IsEnable"]
-        sort = 1 if args["Sort"] is None else args["Sort"] 
+        code = None if args["Code"] is None else args["Code"]
 
 
-        if name is not None :
-            if Role.is_name_exist(name):
+        if name is not None and code is not None :
+            if Form.is_name_exist(name):
                 status = 202 
                 message = "角色名稱已存在"
             else:
-                role = Role(
+                form = Form(
                     name= name,
+                    code = code ,
                     isEnable = isEnable, 
-                    sort = sort, 
                     createId =  createId , 
                     createTime = datetime.now(),
                     modifyId = createId ,
                     modifyTime = datetime.now()  
                     )
-                role = Role.insert_role(role)
+                form = Form.insert_form(form)
                 
-                if role is not None :
+                if form is not None :
                     status = 200 
                     message = "新增資料成功"
                     data = {
-                    "Id" : role.id
+                    "Id" : form.id
                 }   
                 else :
                     status = 200 
@@ -163,7 +171,7 @@ class CreateRole(Resource):
                          
         else :
             status = 201
-            message = "名字不能為空"      
+            message = "名字或編碼不能為空"      
         
         return jsonify({
             "Status": status,
@@ -172,7 +180,7 @@ class CreateRole(Resource):
         })
     
     
-class UpdateRole(Resource):
+class UpdateForm(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -187,40 +195,39 @@ class UpdateRole(Resource):
             .add_argument("Id", type=int, location='json', required=False) \
             .add_argument("Name", type=str, location='json', required=False) \
             .add_argument("IsEnable", type=bool, location='json', required=False) \
-            .add_argument("Sort", type=int, location='json', required=False) \
+            .add_argument("CodeName", type=str, location='json', required=False) \
             .parse_args()
             
         id = None if args["Id"] is None else args["Id"]
         name = None if args["Name"] is None else args["Name"]
         isEnable = True if args["IsEnable"] is None else args["IsEnable"]
-        sort = 1 if args["Sort"] is None else args["Sort"]
+        codeName = None if args["CodeName"] is None else args["CodeName"]
         
-        role = Role.get_role(id)
+        form = Form.get_form(id)
         
         
-        if role is not None :
-            if Role.is_name_exist(name):
+        if form is not None :
+            if Form.is_name_exist(name) and name != form.name:
                 status = 202 
-                message = "角色名稱已存在"
+                message = "表單名稱已存在"
             else:
-                role.isEnable = isEnable
-                role.name = name
-                role.sort = sort
-                role.modifyTime = datetime.now() 
-                role.modifyId = modifyId
-                role = Role.update_role(role)
-                if role is not None :
+                form.isEnable = isEnable
+                form.name = name
+                form.modifyTime = datetime.now() 
+                form.modifyId = modifyId
+                form = Form.update_form(form)
+                if form is not None :
                     status = 200 
                     message = "更新資料成功"
                     data = {
-                        "Id" : role.id
+                        "Id" : form.id
                     }   
                 else :
                     status = 200 
                     message = "更新資料失敗"    
         else :
             status = 201
-            message = "查無此角色ID"
+            message = "查無此表單ID"
             
         
         return jsonify({
@@ -230,7 +237,7 @@ class UpdateRole(Resource):
         })
         
         
-class DeleteRole(Resource):
+class DeleteForm(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -245,10 +252,10 @@ class DeleteRole(Resource):
         id = 0 if args["Id"] is None else args["Id"]
 
 
-        if Role.is_id_exist(id):
-            role = Role.get_role(id)
+        if Form.is_id_exist(id):
+            form = Form.get_form(id)
             try:
-                Role.delete_role(role)
+                Form.delete_form(form)
                 status = 200
                 message= '刪除成功'
                 
