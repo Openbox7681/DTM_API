@@ -17,12 +17,6 @@ class RoleForm(db.Model):
     modifyId = db.Column(db.Integer, nullable=False)
     modifyTime = db.Column(db.DateTime , nullable=False)
 
-#     #一對一
-#     #通過 relationship 與 role form 綁定資料
-#     db_form_role = db.relationship("RoleForm", backref="product")
-
-
-
 
     def __init__(self, roleId, formId, actionRead, createId , createTime , modifyId , modifyTime):
         self.roleId = roleId
@@ -32,3 +26,35 @@ class RoleForm(db.Model):
         self.createTime = createTime
         self.modifyId = modifyId
         self.modifyTime = modifyTime
+
+    #利用id 取得角色權限資料
+    @staticmethod
+    def get_roleForm(id):
+        return RoleForm.query.filter(RoleForm.id == id).first()
+
+    #取得所有角色權限資料
+    @staticmethod
+    def get_all_roleForms():
+        return RoleForm.query.filter(RoleForm.isEnable == 1).all()
+    
+    #新增角色權限
+    @staticmethod
+    def insert_roleForm(roleForm):
+        db.session.add(roleForm)
+        db.session.commit()
+        return roleForm
+    
+    #角色權限資料更新
+    @staticmethod
+    def update_roleForm(roleForm):
+        db.session.merge(roleForm)
+        db.session.commit()
+        return roleForm
+
+    @staticmethod
+    def get_roleForms_by_roleId(roleId):
+        roleForm = RoleForm.query
+        roleForm = roleForm.filter(roleForm.roleId == roleId)
+        return roleForm.all()
+
+

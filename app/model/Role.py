@@ -18,7 +18,7 @@ class Role(db.Model):
 
     #一對多 一
     #通過 relationship 與 role form 綁定資料
-    db_role_roleForm = db.relationship("RoleForm", backref="role")
+    db_role_roleForm = db.relationship("RoleForm", backref="role", cascade='save-update,delete')
 
 
 

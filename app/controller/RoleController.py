@@ -3,6 +3,8 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token, jwt_required ,get_jwt_identity
 from app.model.User import User
 from app.model.Role import Role
+from app.model.Form import Form
+from app.model.RoleForm import RoleForm
 from datetime import datetime
 
 from app import jwt
@@ -146,8 +148,25 @@ class CreateRole(Resource):
                     modifyId = createId ,
                     modifyTime = datetime.now()  
                     )
+
+                #寫入角色資料
                 role = Role.insert_role(role)
-                
+                #寫入角色權限資料
+                forms = Form.get_all_forms()
+                for form in forms:
+                    FormId = form.id
+                    RoleId = role.id
+                    roleForm = RoleForm(
+                        roleId = RoleId,
+                        formId = FormId,
+                        actionRead = False,
+                        createId = 1,
+                        createTime = datetime.now(),
+                        modifyId = 1,
+                        modifyTime = datetime.now()
+                        )
+                    RoleForm.insert_roleForm(roleForm)
+
                 if role is not None :
                     status = 200 
                     message = "新增資料成功"
