@@ -54,7 +54,13 @@ class RoleForm(db.Model):
     @staticmethod
     def get_roleForms_by_roleId(roleId):
         roleForm = RoleForm.query
-        roleForm = roleForm.filter(roleForm.roleId == roleId)
+        roleForm = roleForm.filter(RoleForm.roleId == roleId)
         return roleForm.all()
 
+    @staticmethod
+    def get_roleForms_by_roleId_and_formId(roleId,  formId):
+        roleForm = RoleForm.query
+        roleForm = roleForm.filter(RoleForm.roleId == roleId)
+        roleForm = roleForm.filter(RoleForm.formId == formId)
+        return roleForm.first()
 

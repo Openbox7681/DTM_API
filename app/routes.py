@@ -4,6 +4,7 @@ from app.controller.LoginController import Login, Users, Refresh
 from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
+from app.controller.RoleFormController import UpdateRoleForm,QueryRoleFormByRoleId
 
 logging.config.dictConfig(
     {
@@ -138,5 +139,11 @@ api.add_resource(DeleteForm, '/form/delete', resource_class_kwargs={
     'logger': logging.getLogger('/form/delete')
 })
 
+#表單權限功能
+api.add_resource(UpdateRoleForm, '/roleForm/update', resource_class_kwargs={
+    'logger': logging.getLogger('/roleForm/update')
+})
 
-
+api.add_resource(QueryRoleFormByRoleId, '/roleForm/query/roleId', resource_class_kwargs={
+    'logger': logging.getLogger('/roleForm/query/roleId')
+})
