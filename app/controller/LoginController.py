@@ -1,8 +1,11 @@
 from flask import jsonify
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token, jwt_required ,get_jwt_identity
+from flask_jwt_extended import create_refresh_token
 from app.model.User import User
 from app.model.Role import Role
+from app.model.RoleForm import RoleForm
+
 
 from app import jwt
 
@@ -14,6 +17,32 @@ def expired_token_callback(jwt_header, jwt_payload):
         'message': "token expired"
         # 'msg' : jwt_payload
     })
+
+
+class Refresh(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def post(self):
+        status = None
+        message = None
+        data = None
+        userId = get_jwt_identity()
+
+
+        refresh_token = create_refresh_token(identity=userId)
+
+        data = {
+            "RefreshToken": refresh_token
+        }
+
+
+        return jsonify({
+            "code": 200,
+            "message": "success",
+            "data": data
+        })
+
 
 
 class Login(Resource):
@@ -57,12 +86,27 @@ class Login(Resource):
             roleId =  user.id_role
             roleName = user.role.name
 
+            roleFormList = user.role.db_role_roleForm
+
+
+            roleFormJson = list()
+            for roleForm in roleFormList:
+                roleFormData = {
+                    "FormId" : roleForm.formId,
+                    "FormName" : roleForm.form.name,
+                    "ActionRead" : roleForm.actionRead
+                }
+
+                roleFormJson.append(roleFormData)
+
+
             data = {
                 "Token": token,
                 "Account" : account,
                 "Id": id,
-                "RoleId" : roleId , 
-                "RoleName" : roleName
+                "RoleId" : roleId, 
+                "RoleName" : roleName,
+                "RoleFormList" : roleFormJson
             }
 
         return jsonify({

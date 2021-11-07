@@ -1,6 +1,6 @@
 import logging.config
 from app import api
-from app.controller.LoginController import Login, Users
+from app.controller.LoginController import Login, Users, Refresh
 from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
@@ -66,6 +66,12 @@ api.add_resource(Login, '/account/user/login', resource_class_kwargs={
 api.add_resource(Users, '/users', resource_class_kwargs={
     'logger': logging.getLogger('/users')
 })
+
+api.add_resource(Refresh, '/account/user/refresh', resource_class_kwargs={
+    'logger': logging.getLogger('/users')
+})
+
+
 
 #角色相關
 api.add_resource(QueryRole, '/roles/query', resource_class_kwargs={
