@@ -17,6 +17,30 @@ def expired_token_callback(jwt_header, jwt_payload):
         # 'msg' : jwt_payload
     })
 
+class GetAllRoles(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def get(self):
+        message = None
+        total = 0
+        status = None
+        data = dict()
+        dataList = list()
+
+        userId = get_jwt_identity()
+        
+        roleList = Role.get_all_roles()
+
+        for role in roleList:
+            dataList.append({"roleId": role.id, "roleName" : role.name})
+        data["RoleList"]= dataList
+
+        return jsonify({
+            "code": 200,
+            "message": "success",
+            "data": data
+        })
 class UpdateRoleForm(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
