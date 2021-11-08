@@ -25,7 +25,60 @@ class GetCpuInfo(Resource):
 
 
         return jsonify({
-            "code": 200,
-            "message": "success",
-            "data": data
+            "Status": status,
+            "Message": message,
+            "Data": data
+        })
+
+
+
+class GetMemoryInfo(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def get(self):
+        message = None
+        status = None
+        data = dict()
+
+        try : 
+            status = 200
+            message = 'success'
+            data = system.get_MemoryInfo()
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data
+        })
+
+
+class GetDiskInfo(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def get(self):
+        message = None
+        status = None
+        data = dict()
+
+        try : 
+            status = 200
+            message = 'success'
+            data = system.get_DiskInfo()
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data
         })

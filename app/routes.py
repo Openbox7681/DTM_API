@@ -5,7 +5,7 @@ from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, 
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
 from app.controller.RoleFormController import UpdateRoleForm,QueryRoleFormByRoleId,GetAllRoles
-from app.controller.DashBoardController import GetCpuInfo
+from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDiskInfo
 
 
 logging.config.dictConfig(
@@ -159,4 +159,13 @@ api.add_resource(GetAllRoles, '/roleForm/getAllRoles', resource_class_kwargs={
 api.add_resource(GetCpuInfo, '/dashboard/getCpuInfo', resource_class_kwargs={
     'logger': logging.getLogger('/dashboard/getCpuInfo')
 })
+
+api.add_resource(GetMemoryInfo, '/dashboard/getMemoryInfo', resource_class_kwargs={
+    'logger': logging.getLogger('/dashboard/getMemoryInfo')
+})
+
+api.add_resource(GetDiskInfo, '/dashboard/getDiskInfo', resource_class_kwargs={
+    'logger': logging.getLogger('/dashboard/getDiskInfo')
+})
+
 

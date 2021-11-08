@@ -7,7 +7,7 @@ def get_CpuInfo():
     #cpu 數量
     cpuCount = psutil.cpu_count()
     #per cpu count 使用率
-    cpuPerList = psutil.cpu_percent(interval=2, percpu=True)
+    cpuPerList = psutil.cpu_percent(interval=1, percpu=True)
     #當前cpu 主頻率
     cpuFreq = psutil.cpu_freq()
     currentCpuFreq = cpuFreq.current
@@ -24,3 +24,45 @@ def get_CpuInfo():
     }
 
     return response
+
+#取得Memory資訊
+def get_MemoryInfo():
+    #Memory資訊
+    memory = psutil.virtual_memory()
+    response = dict()
+    print(memory)
+    total = memory.total
+    available = memory.available
+    percent = memory.percent
+    used = memory.used
+    free = memory.free
+
+    response = {
+        "Total" : memory.total,
+        "Available" : memory.available,
+        "Percent" : memory.percent,
+        "Used" : memory.used,
+        "Free" : memory.free
+    }
+    return response
+
+#取得Disk資訊
+def get_DiskInfo():
+    disk = psutil.virtual_memory()
+    response = dict()
+    disk = psutil.disk_usage('/') 
+
+    response = {
+        "Total" : disk.total,
+        "Percent" : disk.percent,
+        "Used" : disk.used,
+        "Free" : disk.free
+    }
+
+
+
+    return response
+
+
+
+
