@@ -4,3 +4,4 @@ flask-jwt-extended
 flask_sqlalchemy
 flask_cors
 pymysql
+dnspython

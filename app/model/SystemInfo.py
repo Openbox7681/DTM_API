@@ -1,6 +1,6 @@
 import psutil
 import socket
-
+import dns.resolver
 #取得CPU資訊
 def get_CpuInfo():
     response = dict()
@@ -58,10 +58,27 @@ def get_DiskInfo():
         "Used" : disk.used,
         "Free" : disk.free
     }
-
-
-
     return response
+
+def get_all_interface():
+    netInfo = psutil.net_if_addrs()
+    interfaceKey =  netInfo.keys()
+    response = list()
+    dnsIp = dns.resolver.Resolver().nameservers[0]
+    for interfaceName in interfaceKey:
+        responseJson = dict()
+        interface = netInfo[interfaceName][0]
+        responseJson = {
+            'Interface' : interfaceName,
+            'Address' : interface.address,
+            'NetMask' : interface.netmask,
+            'Broadcast' : interface.broadcast,
+            'Dns' : dnsIp
+        }
+        response.append(responseJson)
+    return response
+
+
 
 
 

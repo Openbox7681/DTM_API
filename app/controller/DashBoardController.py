@@ -82,3 +82,32 @@ class GetDiskInfo(Resource):
             "Message": message,
             "Data": data
         })
+
+
+class GetAllInterface(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def get(self):
+        message = None
+        status = None
+        data = dict()
+
+        try : 
+            status = 200
+            message = 'success'
+            data = system.get_all_interface()
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data
+        })
+
+
+
