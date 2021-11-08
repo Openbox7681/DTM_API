@@ -1,6 +1,7 @@
 import psutil
 import socket
 import dns.resolver
+
 #取得CPU資訊
 def get_CpuInfo():
     response = dict()
@@ -77,6 +78,25 @@ def get_all_interface():
         }
         response.append(responseJson)
     return response
+
+def get_all_interface_bytes():
+    interfaceInfo = psutil.net_io_counters(pernic=True)
+    interfaceKey = interfaceInfo.keys()
+    response = list()
+    for interfaceName in interfaceKey:
+        responseJson = dict()
+        print(interfaceInfo[interfaceName])
+        interface_bytes = interfaceInfo[interfaceName]
+        responseJson = {
+            'Interface' : interfaceName,
+            'BytesSent' : interface_bytes.bytes_sent,
+            'BytesRecv' : interface_bytes.bytes_recv,
+            'PacketsSent' : interface_bytes.packets_sent,
+            'PacketsRecv' : interface_bytes.packets_recv
+        }
+        response.append(responseJson)
+    return response
+
 
 
 
