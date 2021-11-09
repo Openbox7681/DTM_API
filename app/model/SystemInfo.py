@@ -1,6 +1,7 @@
 import psutil
 import socket
 import dns.resolver
+import time
 
 #取得CPU資訊
 def get_CpuInfo():
@@ -31,7 +32,6 @@ def get_MemoryInfo():
     #Memory資訊
     memory = psutil.virtual_memory()
     response = dict()
-    print(memory)
     total = memory.total
     available = memory.available
     percent = memory.percent
@@ -80,26 +80,52 @@ def get_all_interface():
     return response
 
 def get_all_interface_bytes():
-    interfaceInfo = psutil.net_io_counters(pernic=True)
-    interfaceKey = interfaceInfo.keys()
+    interfaceKey,networkIn, networkOut, p_networkIn, p_networkOut = getNetworkRate(2)
     response = list()
     for interfaceName in interfaceKey:
         responseJson = dict()
-        print(interfaceInfo[interfaceName])
-        interface_bytes = interfaceInfo[interfaceName]
         responseJson = {
             'Interface' : interfaceName,
-            'BytesSent' : interface_bytes.bytes_sent,
-            'BytesRecv' : interface_bytes.bytes_recv,
-            'PacketsSent' : interface_bytes.packets_sent,
-            'PacketsRecv' : interface_bytes.packets_recv
+            'BytesSent' : networkIn.get(interfaceName) ,
+            'BytesRecv' : networkOut.get(interfaceName),
+            'PacketsSent' : p_networkIn.get(interfaceName),
+            'PacketsRecv' : p_networkOut.get(interfaceName)
         }
         response.append(responseJson)
     return response
 
 
 
+def getNetworkData():
+    # 取得網卡流量bytes 與封包
+    recv = {}
+    p_recv = {}
+    sent = {}
+    p_sent = {}
+    data = psutil.net_io_counters(pernic=True)
+    interfaces = data.keys()
+    for interface in interfaces:
+        recv.setdefault(interface, data.get(interface).bytes_recv)
+        p_recv.setdefault(interface, data.get(interface).packets_recv)
+        sent.setdefault(interface, data.get(interface).bytes_sent)
+        p_sent.setdefault(interface, data.get(interface).packets_sent)
+    return interfaces, recv, sent, p_recv, p_sent
 
 
 
+def getNetworkRate(num):
+    # 計算流量速率
+    interfaces, oldRecv, oldSent , p_oldRecv, p_oldSent = getNetworkData()
+    time.sleep(num)
+    interfaces, newRecv, newSent, p_newRecv, p_newSent = getNetworkData()
+    networkIn = {}
+    p_networkIn = {}
+    networkOut = {}
+    p_networkOut = {}
+    for interface in interfaces:
+        networkIn.setdefault(interface, float("%.3f" % ((newRecv.get(interface) - oldRecv.get(interface)) / num)))
+        p_networkIn.setdefault(interface, float("%.3f" % ((p_newRecv.get(interface) - p_oldRecv.get(interface)) / num)))
+        networkOut.setdefault(interface, float("%.3f" % ((newSent.get(interface) - oldSent.get(interface)) / num)))
+        p_networkOut.setdefault(interface, float("%.3f" % ((p_newSent.get(interface) - p_oldSent.get(interface)) / num)))
 
+    return interfaces, networkIn, networkOut, p_networkIn, p_networkOut
