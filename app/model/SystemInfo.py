@@ -20,15 +20,15 @@ def getAllServiceStatus():
     response = dict()
 
     sshServiceStatus = os.popen('sudo systemctl status ssh.service |grep Active').read()
-    sshServiceIsAuto = os.popen('sudo systemctl is-enabled ssh.service |grep Active').read()
+    sshServiceIsAuto = os.popen('sudo systemctl is-enabled ssh.service').read()
     tdAgentServiceStatus = os.popen('sudo systemctl status td-agent.service |grep Active').read()
-    tdAgentServiceIsAuto = os.popen('sudo systemctl is-enabled td-agent.service |grep Active').read()
+    tdAgentServiceIsAuto = os.popen('sudo systemctl is-enabled td-agent.service').read()
     suricateServiceStatus = os.popen('sudo systemctl status suricata.service |grep Active').read()
-    suricateServiceIsAuto = os.popen('sudo systemctl is-enabled suricata.service |grep Active').read()
+    suricateServiceIsAuto = os.popen('sudo systemctl is-enabled suricata.service').read()
     ntpServiceStatus = os.popen('sudo systemctl status ntp.service |grep Active').read()
-    ntpServiceIsAuto = os.popen('sudo systemctl is-enabled ntp.service |grep Active').read()
+    ntpServiceIsAuto = os.popen('sudo systemctl is-enabled ntp.service').read()
     dtmServiceStatus = os.popen('sudo systemctl status low-latency-packet-filtering.service |grep Active').read()
-    dtmServiceIsAuto = os.popen('sudo systemctl is-enabled low-latency-packet-filtering.service |grep Active').read()
+    dtmServiceIsAuto = os.popen('sudo systemctl is-enabled low-latency-packet-filtering.service').read()
 
 
     response = {
