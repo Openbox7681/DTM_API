@@ -20,20 +20,30 @@ def getAllServiceStatus():
     response = dict()
 
     sshServiceStatus = os.popen('sudo systemctl status ssh.service |grep Active').read()
+    sshServiceIsAuto = os.popen('sudo systemctl is-enabled ssh.service |grep Active').read()
     tdAgentServiceStatus = os.popen('sudo systemctl status td-agent.service |grep Active').read()
+    tdAgentServiceIsAuto = os.popen('sudo systemctl is-enabled td-agent.service |grep Active').read()
     suricateServiceStatus = os.popen('sudo systemctl status suricata.service |grep Active').read()
+    suricateServiceIsAuto = os.popen('sudo systemctl is-enabled suricata.service |grep Active').read()
     ntpServiceStatus = os.popen('sudo systemctl status ntp.service |grep Active').read()
+    ntpServiceIsAuto = os.popen('sudo systemctl is-enabled ntp.service |grep Active').read()
     dtmServiceStatus = os.popen('sudo systemctl status low-latency-packet-filtering.service |grep Active').read()
-    
+    dtmServiceIsAuto = os.popen('sudo systemctl is-enabled low-latency-packet-filtering.service |grep Active').read()
+
+
     response = {
-        "SSHSeriveStatus" : 'active' in sshServiceStatus,
+        "SshSeriveStatus" : 'active' in sshServiceStatus,
+        "SshServiceIsAuto" : 'enabled' in sshServiceIsAuto,
         "TdAgentServiceStatus" : 'active' in tdAgentServiceStatus,
+        "TdAgentServiceIsAuto" : 'enabled' in tdAgentServiceIsAuto,
         "SuricateServiceStatus" : 'active' in suricateServiceStatus,
+        "SuricateServiceIsAuto" : 'enabled' in suricateServiceIsAuto,
         "NtpServiceStatus" : 'active' in ntpServiceStatus,
-        "DtmServiceStatus" : 'active' in dtmServiceStatus
+        "NtpServiceIsAuto" : 'enabled' in ntpServiceIsAuto,
+        "DtmServiceStatus" : 'active' in dtmServiceStatus,
+        "DtmServiceIsAuto" : 'enabled' in dtmServiceIsAuto,
     }
 
-    print(response)
     return response
 
 
