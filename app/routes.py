@@ -7,6 +7,8 @@ from app.controller.FormController import QueryForm, QueryFormById, CreateForm, 
 from app.controller.RoleFormController import UpdateRoleForm,QueryRoleFormByRoleId,GetAllRoles
 from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDiskInfo, GetAllInterface, GetAllInterfaceBytes
 
+from app.controller.ServiceController import GetServiceStatus
+
 
 logging.config.dictConfig(
     {
@@ -175,6 +177,11 @@ api.add_resource(GetAllInterface, '/dashboard/getAllInterface', resource_class_k
 api.add_resource(GetAllInterfaceBytes, '/dashboard/getAllInterfaceBytes', resource_class_kwargs={
     'logger': logging.getLogger('/dashboard/getAllInterfaceBytes')
 })
+#Service 功能
+api.add_resource(GetServiceStatus, '/service/getServiceStatus', resource_class_kwargs={
+    'logger': logging.getLogger('/service/getServiceStatus')
+})
+
 
 
 

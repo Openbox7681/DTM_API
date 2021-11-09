@@ -126,7 +126,7 @@ class GetAllInterfaceBytes(Resource):
             status = 201
             message = 'error'
             data = str(e)
-            
+
         return jsonify({
             "Status": status,
             "Message": message,

@@ -2,6 +2,40 @@ import psutil
 import socket
 import dns.resolver
 import time
+import os 
+
+#取得Inbound 資訊
+def get_bound_info():
+    response = dict()
+    inbound =os.popen('cat /etc/dtm/build/dtm.config |grep INBOUND').read()
+    outbound =os.popen('cat /etc/dtm/build/dtm.config |grep OUTBOUND').read()
+    response = {
+        "Inbound" : inbound,
+        "Outbound" : outbound
+    }
+    return response
+
+def getAllServiceStatus():
+
+    response = dict()
+
+    sshServiceStatus = os.popen('sudo systemctl status ssh.service |grep Active').read()
+    tdAgentServiceStatus = os.popen('sudo systemctl status td-agent.service |grep Active').read()
+    suricateServiceStatus = os.popen('sudo systemctl status suricata.service |grep Active').read()
+    ntpServiceStatus = os.popen('sudo systemctl status ntp.service |grep Active').read()
+    dtmServiceStatus = os.popen('sudo systemctl status low-latency-packet-filtering.service |grep Active').read()
+    
+    response = {
+        "SSHSeriveStatus" : 'active' in sshServiceStatus,
+        "TdAgentServiceStatus" : 'active' in tdAgentServiceStatus,
+        "SuricateServiceStatus" : 'active' in suricateServiceStatus,
+        "NtpServiceStatus" : 'active' in ntpServiceStatus,
+        "DtmServiceStatus" : 'active' in dtmServiceStatus
+    }
+
+    print(response)
+    return response
+
 
 #取得CPU資訊
 def get_CpuInfo():
@@ -94,6 +128,25 @@ def get_all_interface_bytes():
         response.append(responseJson)
     return response
 
+#針對特定網卡搜尋資料
+def get_interface_bytes(interface):
+    interfaceKey,networkIn, networkOut, p_networkIn, p_networkOut = getNetworkRate(2)
+    responseJson = dict()
+    for interfaceName in interfaceKey:
+        if interfaceName == interface:
+            responseJson = {
+            'Interface' : interfaceName,
+            'BytesSent' : networkIn.get(interfaceName) ,
+            'BytesRecv' : networkOut.get(interfaceName),
+            'PacketsSent' : p_networkIn.get(interfaceName),
+            'PacketsRecv' : p_networkOut.get(interfaceName)
+        }
+    return responseJson
+
+#取得所有網卡
+def get_all_interfacesName():
+    interfacesName, _, _ , _ ,_ = getNetworkData()
+    return interfacesName
 
 
 def getNetworkData():
