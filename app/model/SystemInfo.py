@@ -17,8 +17,24 @@ def get_bound_info():
 
 def runService(serviceName):
     response = dict()
+    try:
+        cmd = 'sudo systemctl start ' + serviceName
+        sshServiceStatus = os.popen(cmd)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
-    sshServiceStatus = os.popen
+
+def stopService(serviceName):
+    response = dict()
+    try:
+        cmd = 'sudo systemctl stop ' + serviceName
+        sshServiceStatus = os.popen(cmd)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 def getAllServiceStatus():
 
