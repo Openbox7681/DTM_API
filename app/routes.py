@@ -7,7 +7,7 @@ from app.controller.FormController import QueryForm, QueryFormById, CreateForm, 
 from app.controller.RoleFormController import UpdateRoleForm,QueryRoleFormByRoleId,GetAllRoles
 from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDiskInfo, GetAllInterface, GetAllInterfaceBytes
 
-from app.controller.ServiceController import GetServiceStatus,StartService,StopService
+from app.controller.ServiceController import GetServiceStatus,StartService,StopService, EnableService, DisableService
 
 
 logging.config.dictConfig(
@@ -190,5 +190,12 @@ api.add_resource(StopService, '/service/stopService', resource_class_kwargs={
     'logger': logging.getLogger('/service/startService')
 })
 
+api.add_resource(EnableService, '/service/enableService', resource_class_kwargs={
+    'logger': logging.getLogger('/service/enableService')
+})
+
+api.add_resource(DisableService, '/service/disableService', resource_class_kwargs={
+    'logger': logging.getLogger('/service/disableService')
+})
 
 

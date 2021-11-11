@@ -59,6 +59,36 @@ class StartService(Resource):
             "Data": data
         })
 
+class EnableService(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def post(self):
+        message = None
+        status = None
+        data = dict()
+
+        args = reqparse.RequestParser() \
+            .add_argument("ServiceName", type=str, location='json', required=True) \
+            .parse_args()
+        
+        ServiceName = None if args["ServiceName"] is None else args["ServiceName"]
+
+        try : 
+            status = 200
+            message = 'success'
+            data = system.enableService(ServiceName)
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data
+        })
+
 
 class StopService(Resource):
     def __init__(self, **kwargs):
@@ -79,6 +109,37 @@ class StopService(Resource):
             status = 200
             message = 'success'
             data = system.stopService(ServiceName)
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data
+        })
+
+
+class DisableService(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def post(self):
+        message = None
+        status = None
+        data = dict()
+
+        args = reqparse.RequestParser() \
+            .add_argument("ServiceName", type=str, location='json', required=True) \
+            .parse_args()
+        
+        ServiceName = None if args["ServiceName"] is None else args["ServiceName"]
+
+        try : 
+            status = 200
+            message = 'success'
+            data = system.disableService(ServiceName)
         except Exception as e:
             status = 201
             message = 'error'

@@ -25,6 +25,25 @@ def runService(serviceName):
         print(e)
         return False
 
+def enableService(serviceName):
+    response = dict()
+    try:
+        cmd = 'sudo systemctl enable ' + serviceName
+        sshServiceStatus = os.popen(cmd)
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def disableService(serviceName):
+    response = dict()
+    try:
+        cmd = 'sudo systemctl disable ' + serviceName
+        sshServiceStatus = os.popen(cmd)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 def stopService(serviceName):
     response = dict()
@@ -53,15 +72,15 @@ def getAllServiceStatus():
 
 
     response = {
-        "SshSeriveStatus" : 'running' in sshServiceStatus,
+        "SshSeriveIsActive" : 'running' in sshServiceStatus,
         "SshServiceIsAuto" : 'enabled' in sshServiceIsAuto,
-        "TdAgentServiceStatus" : 'running' in tdAgentServiceStatus,
+        "TdAgentServiceIsActive" : 'running' in tdAgentServiceStatus,
         "TdAgentServiceIsAuto" : 'enabled' in tdAgentServiceIsAuto,
-        "SuricateServiceStatus" : 'running' in suricateServiceStatus,
+        "SuricateServiceIsActive" : 'running' in suricateServiceStatus,
         "SuricateServiceIsAuto" : 'enabled' in suricateServiceIsAuto,
-        "NtpServiceStatus" : 'running' in ntpServiceStatus,
+        "NtpServiceIsActive" : 'running' in ntpServiceStatus,
         "NtpServiceIsAuto" : 'enabled' in ntpServiceIsAuto,
-        "DtmServiceStatus" : 'running' in dtmServiceStatus,
+        "DtmServiceIsActive" : 'running' in dtmServiceStatus,
         "DtmServiceIsAuto" : 'enabled' in dtmServiceIsAuto,
     }
 
