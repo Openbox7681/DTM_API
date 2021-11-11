@@ -5,3 +5,5 @@ flask_sqlalchemy
 flask_cors
 pymysql
 dnspython
+psutil
+Flask-Bcrypt

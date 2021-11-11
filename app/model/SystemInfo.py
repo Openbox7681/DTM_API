@@ -15,6 +15,11 @@ def get_bound_info():
     }
     return response
 
+def runService(serviceName):
+    response = dict()
+
+    sshServiceStatus = os.popen
+
 def getAllServiceStatus():
 
     response = dict()
