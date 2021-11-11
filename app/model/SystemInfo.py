@@ -53,15 +53,15 @@ def getAllServiceStatus():
 
 
     response = {
-        "SshSeriveStatus" : 'active' in sshServiceStatus,
+        "SshSeriveStatus" : 'running' in sshServiceStatus,
         "SshServiceIsAuto" : 'enabled' in sshServiceIsAuto,
-        "TdAgentServiceStatus" : 'active' in tdAgentServiceStatus,
+        "TdAgentServiceStatus" : 'running' in tdAgentServiceStatus,
         "TdAgentServiceIsAuto" : 'enabled' in tdAgentServiceIsAuto,
-        "SuricateServiceStatus" : 'active' in suricateServiceStatus,
+        "SuricateServiceStatus" : 'running' in suricateServiceStatus,
         "SuricateServiceIsAuto" : 'enabled' in suricateServiceIsAuto,
-        "NtpServiceStatus" : 'active' in ntpServiceStatus,
+        "NtpServiceStatus" : 'running' in ntpServiceStatus,
         "NtpServiceIsAuto" : 'enabled' in ntpServiceIsAuto,
-        "DtmServiceStatus" : 'active' in dtmServiceStatus,
+        "DtmServiceStatus" : 'running' in dtmServiceStatus,
         "DtmServiceIsAuto" : 'enabled' in dtmServiceIsAuto,
     }
 
