@@ -232,3 +232,29 @@ def getNetworkRate(num):
         p_networkOut.setdefault(interface, float("%.3f" % ((p_newSent.get(interface) - p_oldSent.get(interface)) / num)))
 
     return interfaces, networkIn, networkOut, p_networkIn, p_networkOut
+
+
+def get_suricata_log(size):
+    cmd = 'tail -' +  size + ' /var/log/suricata/fast.log'
+    loglines = os.popen(cmd).readlines()
+    response = list()
+    for log in loglines:
+        res = dict()
+        res = {
+            "data" : log
+        }
+        response.append(res)
+    return response
+
+
+def get_dtm_log(size):
+    cmd = 'tail -' +  size + ' /var/log/dtm/daemon.log |grep block |awk -F ] \'{print $3}\' '
+    loglines = os.popen(cmd).readlines()
+    response = list()
+    for log in loglines:
+        res = dict()
+        res = {
+            "data" : log
+        }
+        response.append(res)
+    return response

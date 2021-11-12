@@ -9,6 +9,8 @@ from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDisk
 
 from app.controller.ServiceController import GetServiceStatus,StartService,StopService, EnableService, DisableService
 
+from app.controller.LogController import GetDTMLog, GetSuricataLog
+
 
 logging.config.dictConfig(
     {
@@ -197,5 +199,15 @@ api.add_resource(EnableService, '/service/enableService', resource_class_kwargs=
 api.add_resource(DisableService, '/service/disableService', resource_class_kwargs={
     'logger': logging.getLogger('/service/disableService')
 })
+
+#取出Log功能
+api.add_resource(GetDTMLog, '/log/dtm', resource_class_kwargs={
+    'logger': logging.getLogger('/log/dtm')
+})
+
+api.add_resource(GetSuricataLog, '/log/suricata', resource_class_kwargs={
+    'logger': logging.getLogger('/log/suricata')
+})
+
 
 
