@@ -235,7 +235,7 @@ def getNetworkRate(num):
 
 
 def get_suricata_log(size):
-    cmd = 'tail -' +  size + ' /var/log/suricata/fast.log'
+    cmd = 'tail -' +  str(size) + ' /var/log/suricata/fast.log'
     loglines = os.popen(cmd).readlines()
     response = list()
     for log in loglines:
@@ -248,7 +248,7 @@ def get_suricata_log(size):
 
 
 def get_dtm_log(size):
-    cmd = 'tail -' +  size + ' /var/log/dtm/daemon.log |grep block |awk -F ] \'{print $3}\' '
+    cmd = 'tail -' +  str(size) + ' /var/log/dtm/daemon.log |grep block |awk -F ] \'{print $3}\' '
     loglines = os.popen(cmd).readlines()
     response = list()
     for log in loglines:
