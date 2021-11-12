@@ -58,6 +58,7 @@ class GetDTMLog(Resource):
             message = 'success'
             data = system.get_dtm_log(size)
         except Exception as e:
+            print(str(e))
             status = 201
             message = 'error'
             data = str(e)

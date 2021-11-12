@@ -268,7 +268,7 @@ def get_dtm_log(size):
             "DestinationIp" : DstIp,
             "DestinationPort" : Port,
             "Protocol" : Protocol,
-            "Techniques" : None if data["signature"] is None else data["signature"] , 
+            "Techniques" : "None" if data["signature"] is None else data["signature"] , 
             "Status" : data["status"]
         }
         response.append(res)
