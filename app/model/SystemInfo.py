@@ -254,8 +254,22 @@ def get_dtm_log(size):
     response = list()
     for log in loglines:
         res = dict()
+
+        data = json.loads(log)
+        blockInfo = data['blockinfo']
+        blockInfo = [int(item,16) for item in blockInfo.split(" ")]
+        SoureIp = '.'.join(map(str, blockInfo[:4]))
+        DstIp = '.'.join(map(str, blockInfo[4:8]))
+        Port = ''.join(map(str, blockInfo[8:10]))
+        Protocol = blockInfo[10]
+
         res = {
-            "data" : json.loads(log)
+            "SourceIp" : SoureIp,
+            "DestinationIp" : DstIp,
+            "DestinationPort" : Port,
+            "Protocol" : Protocol,
+            "Techniques" : data['signature'] , 
+            "Status" : data["status"]
         }
         response.append(res)
     return response
