@@ -3,6 +3,7 @@ import socket
 import dns.resolver
 import time
 import os 
+import json
 
 #取得Inbound 資訊
 def get_bound_info():
@@ -254,7 +255,7 @@ def get_dtm_log(size):
     for log in loglines:
         res = dict()
         res = {
-            "data" : log
+            "data" : json.loads(log)
         }
         response.append(res)
     return response
