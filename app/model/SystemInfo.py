@@ -263,12 +263,17 @@ def get_dtm_log(size):
         Port = ''.join(map(str, blockInfo[8:10]))
         Protocol = blockInfo[10]
 
+        status = data['status']
+
+
+
         res = {
             "SourceIp" : SoureIp,
             "DestinationIp" : DstIp,
             "DestinationPort" : Port,
             "Protocol" : Protocol,
-            "Status" : data["status"]
+            "Status" : data["status"] ,
+            "Tech" : None if status == 'del' else data['signature']
         }
         response.append(res)
     return response
