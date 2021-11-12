@@ -261,11 +261,18 @@ def get_dtm_log(size):
         SoureIp = '.'.join(map(str, blockInfo[:4]))
         DstIp = '.'.join(map(str, blockInfo[4:8]))
         Port = ''.join(map(str, blockInfo[8:10]))
-        Protocol = blockInfo[10]
+        Protocolnum = blockInfo[10]
 
         status = data['status']
 
-
+        if Protocolnum == 1:
+            Protocol = 'ICMP'
+        elif Protocolnum == 6:
+            Protocol = 'TCP'
+        elif Protocolnum == 17:
+            Protocol = 'UDP'
+        else :
+            Protocol = None
 
         res = {
             "SourceIp" : SoureIp,
@@ -273,7 +280,7 @@ def get_dtm_log(size):
             "DestinationPort" : Port,
             "Protocol" : Protocol,
             "Status" : data["status"] ,
-            "Tech" : None if status == 'del' else data['signature']
+            "Techniques" : None if status == 'del' else data['signature']
         }
         response.append(res)
     return response
