@@ -30,7 +30,9 @@ class Refresh(Resource):
         userId = get_jwt_identity()
 
 
-        refresh_token = create_refresh_token(identity=userId)
+        # refresh_token = create_refresh_token(identity=userId)
+
+        refresh_token = create_access_token(identity=userId)
 
         data = {
             "RefreshToken": refresh_token
