@@ -112,17 +112,6 @@ db.session.add(UserRole)
 
 password='123'
 hashed_password = bcrypt.generate_password_hash(password=password)
-user = User(account="user01", 
-            password=hashed_password, 
-            email = "user01@gmail",
-            isEnable = True, 
-            enableTime = datetime.now(), 
-            createId = 1 , 
-            createTime = datetime.now(),
-            modifyId = 1,
-            modifyTime = datetime.now(),
-            id_role=2
-            )
 
 
 admin = User(account="SuperAdmin", 
@@ -137,17 +126,10 @@ admin = User(account="SuperAdmin",
             id_role=1
             )
 
-db.session.add(user)
 db.session.add(admin)
 
 
 #==================================#
-
-
-
-
-
-
 
 
 db.session.commit()

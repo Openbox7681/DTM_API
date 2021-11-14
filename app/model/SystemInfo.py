@@ -4,6 +4,7 @@ import dns.resolver
 import time
 import os 
 import json
+from crontab import CronTab
 
 #取得Inbound 資訊
 def get_bound_info():
@@ -72,6 +73,23 @@ def getAllServiceStatus():
     dtmServiceIsAuto = os.popen('sudo systemctl is-enabled low-latency-packet-filtering.service').read()
 
 
+    my_user_cron = CronTab(user=True)
+    XDPIsAuto = False
+    DTMIsAuto = False
+    for job in my_user_cron.find_command('set_bridge.sh'):
+        set_bridge_job = job
+        if set_bridge_job is not None :
+            DTMIsAuto = set_bridge_job.is_valid()
+
+    for job in my_user_cron.find_command('xdp_loader.sh'):
+        xdp_loader_job = job
+        if xdp_loader_job is not None :
+            XDPIsAuto = xdp_loader_job.is_valid()
+        
+
+
+
+
     response = {
         "SshSeriveIsActive" : 'running' in sshServiceStatus,
         "SshServiceIsAuto" : 'enabled' in sshServiceIsAuto,
@@ -83,6 +101,8 @@ def getAllServiceStatus():
         "NtpServiceIsAuto" : 'enabled' in ntpServiceIsAuto,
         "DtmServiceIsActive" : 'running' in dtmServiceStatus,
         "DtmServiceIsAuto" : 'enabled' in dtmServiceIsAuto,
+        "DTM_SwitchIsAuto" : DTMIsAuto,
+        "XDPIsAuto" : XDPIsAuto
     }
 
     return response
