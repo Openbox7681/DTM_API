@@ -20,29 +20,67 @@ def get_bound_info():
 def runService(serviceName):
     response = dict()
     try:
-        cmd = 'sudo systemctl start ' + serviceName
-        sshServiceStatus = os.popen(cmd)
-        return True
+        if serviceName == 'DTM_SWITCH' :
+
+            cmd = 'cd /etc/dtm/build/; sudo ./set_bridge.sh -i'
+            sshServiceStatus = os.popen(cmd)
+            return True
+        elif serviceName =='XDP':
+            cmd = 'cd /etc/dtm/build/; sudo ./xdp_loader.sh -m'
+            sshServiceStatus = os.popen(cmd)
+            return True
+        else :
+            cmd = 'sudo systemctl start ' + serviceName
+            sshServiceStatus = os.popen(cmd)
+            return True
     except Exception as e:
         print(e)
         return False
 
 def enableService(serviceName):
     response = dict()
+    my_user_cron = CronTab(user=True)
     try:
-        cmd = 'sudo systemctl enable ' + serviceName
-        sshServiceStatus = os.popen(cmd)
-        return True
+        if serviceName == 'DTM_SWITCH' :
+            for job in my_user_cron.find_command('set_bridge.sh'):
+                job.enable()
+                my_user_cron.write()
+                return True
+        
+        elif serviceName =='XDP':
+            for job in my_user_cron.find_command('xdp_loader.sh'):
+                job.enable()
+                my_user_cron.write()
+                return True
+        else:
+            cmd = 'sudo systemctl enable ' + serviceName
+            sshServiceStatus = os.popen(cmd)
+            return True
     except Exception as e:
         print(e)
         return False
 
 def disableService(serviceName):
     response = dict()
+
+    my_user_cron = CronTab(user=True)
     try:
-        cmd = 'sudo systemctl disable ' + serviceName
-        sshServiceStatus = os.popen(cmd)
-        return True
+        if serviceName == 'DTM_SWITCH' :
+            for job in my_user_cron.find_command('set_bridge.sh'):
+                job.enable(False)
+                my_user_cron.write()
+                return True
+        
+        elif serviceName =='XDP':
+            for job in my_user_cron.find_command('xdp_loader.sh'):
+                job.enable(False)
+                my_user_cron.write()
+                return True
+        else:
+            
+            cmd = 'sudo systemctl disable ' + serviceName
+            sshServiceStatus = os.popen(cmd)
+            return True
     except Exception as e:
         print(e)
         return False
@@ -79,12 +117,12 @@ def getAllServiceStatus():
     for job in my_user_cron.find_command('set_bridge.sh'):
         set_bridge_job = job
         if set_bridge_job is not None :
-            DTMIsAuto = set_bridge_job.is_valid()
+            DTMIsAuto = set_bridge_job.is_enabled()
 
     for job in my_user_cron.find_command('xdp_loader.sh'):
         xdp_loader_job = job
         if xdp_loader_job is not None :
-            XDPIsAuto = xdp_loader_job.is_valid()
+            XDPIsAuto = xdp_loader_job.is_enabled()
         
 
 
