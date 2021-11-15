@@ -5,7 +5,7 @@ from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, 
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
 from app.controller.RoleFormController import UpdateRoleForm,QueryRoleFormByRoleId,GetAllRoles
-from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDiskInfo, GetAllInterface, GetAllInterfaceBytes
+from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDiskInfo, GetAllInterface, GetAllInterfaceBytes,GetNtpServer
 
 from app.controller.ServiceController import GetServiceStatus,StartService,StopService, EnableService, DisableService
 
@@ -179,6 +179,12 @@ api.add_resource(GetAllInterface, '/dashboard/getAllInterface', resource_class_k
 api.add_resource(GetAllInterfaceBytes, '/dashboard/getAllInterfaceBytes', resource_class_kwargs={
     'logger': logging.getLogger('/dashboard/getAllInterfaceBytes')
 })
+
+api.add_resource(GetNtpServer, '/dashboard/getNtpServer', resource_class_kwargs={
+    'logger': logging.getLogger('/dashboard/getNtpServer')
+})
+
+
 #Service 功能
 api.add_resource(GetServiceStatus, '/service/getServiceStatus', resource_class_kwargs={
     'logger': logging.getLogger('/service/getServiceStatus')

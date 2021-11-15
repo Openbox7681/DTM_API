@@ -305,6 +305,15 @@ def get_suricata_log(size):
         response.append(res)
     return response
 
+def get_ntp_server() :
+    cmd = 'cat /etc/suricata/suricata.yaml |grep HOME_NET:|grep -v \# |awk -F : \'{print $2}\''
+    ntpServer = os.popen(cmd).read()
+    response = {
+        "NtpServerList"  : json.loads(ntpServer)
+    }
+    return response
+
+
 
 def get_dtm_log(size):
     cmd = 'tail -' +  str(size) + ' /var/log/dtm/daemon.log |grep block |awk -F ] \'{print $3}\' '
