@@ -5,7 +5,7 @@ from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, 
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
 from app.controller.RoleFormController import UpdateRoleForm,QueryRoleFormByRoleId,GetAllRoles
-from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDiskInfo, GetAllInterface, GetAllInterfaceBytes,GetNtpServer
+from app.controller.DashBoardController import GetCpuInfo,GetMemoryInfo, GetDiskInfo, GetAllInterface, GetAllInterfaceBytes,GetDetection
 
 from app.controller.ServiceController import GetServiceStatus,StartService,StopService, EnableService, DisableService
 
@@ -180,8 +180,8 @@ api.add_resource(GetAllInterfaceBytes, '/dashboard/getAllInterfaceBytes', resour
     'logger': logging.getLogger('/dashboard/getAllInterfaceBytes')
 })
 
-api.add_resource(GetNtpServer, '/dashboard/getNtpServer', resource_class_kwargs={
-    'logger': logging.getLogger('/dashboard/getNtpServer')
+api.add_resource(GetDetection, '/dashboard/getDetection', resource_class_kwargs={
+    'logger': logging.getLogger('/dashboard/getDetection')
 })
 
 

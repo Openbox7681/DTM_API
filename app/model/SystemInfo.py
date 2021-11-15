@@ -305,7 +305,7 @@ def get_suricata_log(size):
         response.append(res)
     return response
 
-def get_ntp_server() :
+def get_detection() :
     cmd = 'cat /etc/suricata/suricata.yaml |grep HOME_NET:|grep -v \# |awk -F : \'{print $2}\''
     ntpServer = os.popen(cmd).read()
     response = {

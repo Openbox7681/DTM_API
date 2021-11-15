@@ -31,7 +31,7 @@ class GetCpuInfo(Resource):
         })
 
 
-class GetNtpServer(Resource):
+class GetDetection(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
     @jwt_required()
@@ -42,7 +42,7 @@ class GetNtpServer(Resource):
         try : 
             status = 200
             message = 'success'
-            data = system.get_ntp_server()
+            data = system.get_detection()
         except Exception as e:
             status = 201
             message = 'error'
