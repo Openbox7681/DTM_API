@@ -309,7 +309,7 @@ def get_detection() :
     cmd = 'cat /etc/suricata/suricata.yaml |grep HOME_NET:|grep -v \# |awk -F : \'{print $2}\''
     ntpServer = os.popen(cmd).read()
     response = {
-        "NtpServerList"  : json.loads(ntpServer)
+        "Detection"  : json.loads(ntpServer)
     }
     return response
 
