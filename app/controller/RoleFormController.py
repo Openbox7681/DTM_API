@@ -100,6 +100,7 @@ class QueryRoleFormByRoleId(Resource):
                 responseJson = {
                     "RoleId" : roleForm.roleId,
                     "FormId" : roleForm.formId,
+                    "FormName" : roleForm.form.name,
                     "ActionRead" : roleForm.actionRead,
                     "CreateId" : roleForm.createId,
                     "CreateId" : roleForm.createId,
