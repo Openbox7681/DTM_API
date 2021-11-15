@@ -57,7 +57,7 @@ class UpdateRoleForm(Resource):
         
         roleFormList = args.get('RoleFormList')
 
-
+        userId = get_jwt_identity()
         for roleFormJson in roleFormList:
             roleId = roleFormJson["RoleId"]
             formId = roleFormJson["FormId"]
@@ -68,6 +68,17 @@ class UpdateRoleForm(Resource):
                 roleForm.modifyId = userId
                 roleForm.modifyTime = datetime.now()
                 RoleForm.update_roleForm(roleForm)
+            else :
+                roleForm = RoleForm(
+                     roleId = roleId,
+                        formId = formId,
+                        actionRead = actionRead,
+                        createId = userId,
+                        createTime = datetime.now(),
+                        modifyId = userId,
+                        modifyTime = datetime.now()
+                )
+                RoleForm.insert_roleForm(roleForm)
         
         status = 200
         message = "更新成功"
