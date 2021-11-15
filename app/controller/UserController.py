@@ -39,7 +39,7 @@ class QueryUser(Resource):
             .parse_args()
         id = 0 if args["Id"] is None else args["Id"]
         account = None if args["Account"] is None else args["Account"]
-        isEnable = True if args["IsEnable"] is None else args["IsEnable"] 
+        isEnable = None if args["IsEnable"] is None else args["IsEnable"] 
         roleId = None if args["RoleId"] is None else args["RoleId"] 
         start = 1 if args["Start"] is None else args["Start"]
         maxRows = 1 if args["MaxRows"] is None else args["MaxRows"]
