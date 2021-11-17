@@ -218,6 +218,8 @@ class UpdateUser(Resource):
 
         
         user = User.get_users_by_id(id)
+        if account == None:
+            account = user.account
         
         if account is not None:
             if user is not None :
