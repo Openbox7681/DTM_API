@@ -223,9 +223,6 @@ class UpdateUser(Resource):
         
         if account is not None:
             if user is not None :
-                if isEnable:
-                    user.isEnable = isEnable
-                    user.enableTime = datetime.now() 
                 if account is not None :
                     user.account = account
                 if email is not None :
@@ -237,6 +234,9 @@ class UpdateUser(Resource):
                     user.password = hashed_password
                 user.modifyTime = datetime.now() 
                 user.modifyId = modifyId
+                user.isEnable = isEnable
+                if isEnable :
+                    user.enableTime = datetime.now() 
                 user = User.update_user(user)
                 if user is not None :
                     status = 200 
