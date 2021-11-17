@@ -215,12 +215,11 @@ class UpdateUser(Resource):
         roleId = 0 if args["RoleId"] is None else args["RoleId"] 
         isEnable = False if args["IsEnable"] is None else args["IsEnable"]
         password = None if args["Password"] is None else args["Password"]
-        
-        hashed_password = bcrypt.generate_password_hash(password=password)
+
         
         user = User.get_users_by_id(id)
         
-        if account is not None and hashed_password is not None:
+        if account is not None:
             if user is not None :
                 if isEnable:
                     user.isEnable = isEnable
@@ -231,7 +230,9 @@ class UpdateUser(Resource):
                     user.email = email
                 if roleId != 0:
                     user.id_role = roleId
-                user.password = hashed_password
+                if password is not None:
+                    hashed_password = bcrypt.generate_password_hash(password=password)
+                    user.password = hashed_password
                 user.modifyTime = datetime.now() 
                 user.modifyId = modifyId
                 user = User.update_user(user)
