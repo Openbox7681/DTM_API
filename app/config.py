@@ -7,7 +7,8 @@ class Config:
     TESTING = True
     ENV = 'development'
     # database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql+pymysql://root:root123@192.168.0.226:3306/DTM'
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI') or 'mysql+pymysql://root:root123@192.168.0.226:3306/DTM'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
     # jwt

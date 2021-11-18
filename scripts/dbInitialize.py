@@ -7,7 +7,9 @@ from datetime import datetime
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root123@59.127.199.98:3306/DTM'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root123@59.127.199.98:3306/DTM'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 bcrypt = Bcrypt()

@@ -7,7 +7,8 @@ from datetime import datetime
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root123@59.127.199.98:3306/DTM'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root123@59.127.199.98:3306/DTM'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 bcrypt = Bcrypt()
@@ -142,110 +143,110 @@ db.create_all()
 ##新增表單資料
 #==================================#
 #首頁表單
-# DashboardForm = Form(
-#     name= "Dashboard",
-#     code= "Dashboard",
-#     isEnable = True,  
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now()
-#     )
+DashboardForm = Form(
+    name= "Dashboard",
+    code= "Dashboard",
+    isEnable = True,  
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now()
+    )
 #監控表單
-# MonitoringScreenForm = Form(
-#     name= "MonitoringScreen",
-#     code= "MonitoringScreen",
-#     isEnable = True,  
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now()
-#     )
+MonitoringScreenForm = Form(
+    name= "MonitoringScreen",
+    code= "MonitoringScreen",
+    isEnable = True,  
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now()
+    )
 
-# MonitoringInterFaceForm = Form(
-#     name= "MonitoringInterFace",
-#     code= "MonitoringInterFace",
-#     isEnable = True,  
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now()
-#     )
+MonitoringInterFaceForm = Form(
+    name= "MonitoringInterFace",
+    code= "MonitoringInterFace",
+    isEnable = True,  
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now()
+    )
 
-# #系統資訊
-# SystemForm = Form(
-#     name= "System",
-#     code= "System",
-#     isEnable = True,  
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now()
-# )
-# #服務啟用查看表單
-# ServiceForm = Form(
-#     name = "Service",
-#     code = "Service",
-#     isEnable = True,
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now() 
-# )
-# #使用者表單
-# UserForm = Form(
-#     name = "User",
-#     code = "User",
-#     isEnable = True,
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now() 
-# )
+#系統資訊
+SystemForm = Form(
+    name= "System",
+    code= "System",
+    isEnable = True,  
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now()
+)
+#服務啟用查看表單
+ServiceForm = Form(
+    name = "Service",
+    code = "Service",
+    isEnable = True,
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now() 
+)
+#使用者表單
+UserForm = Form(
+    name = "User",
+    code = "User",
+    isEnable = True,
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now() 
+)
 
-# #角色設定表單
-# RoleForm = Form(
-#     name = "Role",
-#     code = "Role",
-#     isEnable = True,
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now() 
-# )
+#角色設定表單
+RoleFormt = Form(
+    name = "Role",
+    code = "Role",
+    isEnable = True,
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now() 
+)
 
-# #角色權限設定表單
-# RoleFormForm = Form(
-#     name = "RoleForm",
-#     code = "RoleForm",
-#     isEnable = True,
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now() 
-# )
+#角色權限設定表單
+RoleFormForm = Form(
+    name = "RoleForm",
+    code = "RoleForm",
+    isEnable = True,
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now() 
+)
 
-# #報表設定表單
-# ReportForm = Form(
-#     name = "Report",
-#     code = "Report",
-#     isEnable = True,
-#     createId = 1 , 
-#     createTime = datetime.now(),
-#     modifyId = 1,
-#     modifyTime = datetime.now() 
-# )
+#報表設定表單
+ReportForm = Form(
+    name = "Report",
+    code = "Report",
+    isEnable = True,
+    createId = 1 , 
+    createTime = datetime.now(),
+    modifyId = 1,
+    modifyTime = datetime.now() 
+)
 
 
-# db.session.add(DashboardForm)
-# db.session.add(MonitoringScreenForm)
-# db.session.add(MonitoringInterFaceForm)
-# db.session.add(SystemForm)
-# db.session.add(ServiceForm)
-# db.session.add(UserForm)
-# db.session.add(RoleForm)
-# db.session.add(RoleFormForm)
-# db.session.add(ReportForm)
+db.session.add(DashboardForm)
+db.session.add(MonitoringScreenForm)
+db.session.add(MonitoringInterFaceForm)
+db.session.add(SystemForm)
+db.session.add(ServiceForm)
+db.session.add(UserForm)
+db.session.add(RoleFormt)
+db.session.add(RoleFormForm)
+db.session.add(ReportForm)
 #==================================#
 
 ##新增表單資料權限給SuperAdmin
