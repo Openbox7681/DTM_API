@@ -98,3 +98,86 @@ class TimezoneService(Resource):
             "Data": data
         })
 
+
+class NetworkService(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+
+    def get(self):
+        status = 200
+        message = 'success'
+        data = [
+            {
+                'name': 'enp0s8',
+                'ip_address': '192.168.0.202',
+                'netmask': '255.255.255.0',
+                'mac': '08:00:27:66:ef:5a',
+                'trafic': {
+                    'max': 2000,
+                    'min': 100,
+                    'avg': 1400,
+                    'list': [
+                        {'timestamp': 1641318528, 'flow': 200},
+                        {'timestamp': 1641318528, 'flow': 100},
+                        {'timestamp': 1641318528, 'flow': 600},
+                        {'timestamp': 1641318528, 'flow': 800},
+                        {'timestamp': 1641318528, 'flow': 2000},
+                        {'timestamp': 1641318528, 'flow': 1800},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                    ]
+                }
+            },
+            {
+                'name': 'enp0s9',
+                'ip_address': '192.168.0.203',
+                'netmask': '255.255.255.0',
+                'mac': '08:00:27:8b:76:f3',
+                'trafic': {
+                    'max': 2000,
+                    'min': 100,
+                    'avg': 1400,
+                    'list': [
+                        {'timestamp': 1641318528, 'flow': 200},
+                        {'timestamp': 1641318528, 'flow': 100},
+                        {'timestamp': 1641318528, 'flow': 600},
+                        {'timestamp': 1641318528, 'flow': 800},
+                        {'timestamp': 1641318528, 'flow': 2000},
+                        {'timestamp': 1641318528, 'flow': 1800},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                        {'timestamp': 1641318528, 'flow': 1600},
+                    ]
+                }
+            }
+        ]
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data,
+        })
+
+
+class NTPService(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+
+    def get(self):
+        status = 200
+        message = 'success'
+        data = {
+            'ntp_list': [
+                'pool 0.ubuntu.pool.ntp.org iburst',
+                'pool 1.ubuntu.pool.ntp.org iburst',
+                'pool 2.ubuntu.pool.ntp.org iburst',
+                'pool 3.ubuntu.pool.ntp.org iburst',
+            ]
+        }
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data,
+        })

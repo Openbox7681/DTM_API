@@ -1,7 +1,7 @@
 import logging.config
 from app import api
 from app.controller.LoginController import Login, Users, Refresh
-from app.controller.NetworkController import RebootService, TimezoneService
+from app.controller.NetworkController import RebootService, TimezoneService, NetworkService, NTPService
 from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
@@ -218,10 +218,18 @@ api.add_resource(GetSuricataLog, '/log/suricata', resource_class_kwargs={
 
 #network
 
-api.add_resource(RebootService, '/service/network/reboot', resource_class_kwargs={
-    'logger': logging.getLogger('/network/reboot')
+api.add_resource(RebootService, '/service/reboot', resource_class_kwargs={
+    'logger': logging.getLogger('/service/reboot')
 })
 
-api.add_resource(TimezoneService, '/service/network/timezone', resource_class_kwargs={
-    'logger': logging.getLogger('/network/reboot')
+api.add_resource(TimezoneService, '/service/timezone', resource_class_kwargs={
+    'logger': logging.getLogger('/service/timezone')
+})
+
+api.add_resource(NetworkService, '/service/network', resource_class_kwargs={
+    'logger': logging.getLogger('/service/network')
+})
+
+api.add_resource(NTPService, '/service/ntp', resource_class_kwargs={
+    'logger': logging.getLogger('/service/ntp')
 })
