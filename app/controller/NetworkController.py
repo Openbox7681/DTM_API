@@ -26,7 +26,7 @@ class RebootService(Resource):
             status = 200
             message = 'success'
             data = 'it\' rebooting (fake)'
-            # data = os.system('sudo reboot').read()
+            # data = os.popen('sudo reboot').read()
         except Exception as e:
             status = 201
             message = 'error'
@@ -47,7 +47,7 @@ class ShutdownService(Resource):
         try:
             status = 200
             message = 'success'
-            # data = os.system('sudo shutdown').read()
+            # data = os.popen('sudo shutdown').read()
             data = 'it\' shutting down (fake)'
         except Exception as e:
             status = 201
@@ -69,7 +69,7 @@ class TimezoneService(Resource):
         try:
             status = 200
             message = 'success'
-            data = os.system('sudo cat /etc/timezone').read()
+            data = os.popen('sudo cat /etc/timezone').read()
         except Exception as e:
             status = 201
             message = 'error'
@@ -87,7 +87,7 @@ class TimezoneService(Resource):
         try:
             status = 200
             message = 'success'
-            data = os.system(f'sudo timedatectl set-timezone {args["Timezone"]}').read()
+            data = os.popen(f'sudo timedatectl set-timezone {args["Timezone"]}').read()
         except Exception as e:
             status = 201
             message = 'error'
