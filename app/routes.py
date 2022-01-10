@@ -1,6 +1,7 @@
 import logging.config
 from app import api
 from app.controller.LoginController import Login, Users, Refresh
+from app.controller.NetworkController import RebootService
 from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
@@ -215,5 +216,9 @@ api.add_resource(GetSuricataLog, '/log/suricata', resource_class_kwargs={
     'logger': logging.getLogger('/log/suricata')
 })
 
+#network
 
+api.add_resource(RebootService, '/service/network/reboot', resource_class_kwargs={
+    'logger': logging.getLogger('/network/reboot')
+})
 
