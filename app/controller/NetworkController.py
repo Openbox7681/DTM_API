@@ -26,7 +26,7 @@ class RebootService(Resource):
             status = 200
             message = 'success'
             data = 'it\' rebooting (fake)'
-            # data = os.popen('sudo reboot').read()
+            # data = os.popen('sudo reboot').read().strip()
         except Exception as e:
             status = 201
             message = 'error'
@@ -47,7 +47,7 @@ class ShutdownService(Resource):
         try:
             status = 200
             message = 'success'
-            # data = os.popen('sudo shutdown').read()
+            # data = os.popen('sudo shutdown').read().strip()
             data = 'it\' shutting down (fake)'
         except Exception as e:
             status = 201
@@ -69,7 +69,7 @@ class TimezoneService(Resource):
         try:
             status = 200
             message = 'success'
-            data = os.popen('sudo cat /etc/timezone').read()
+            data = os.popen('sudo cat /etc/timezone').read().strip()
         except Exception as e:
             status = 201
             message = 'error'
@@ -82,12 +82,12 @@ class TimezoneService(Resource):
 
     def post(self):
         args = reqparse.RequestParser() \
-            .add_argument("Timezone", type=str, location='json', required=True)
-
+            .add_argument("Timezone", type=str, location='json', required=True) \
+            .parse_args()
         try:
             status = 200
             message = 'success'
-            data = os.popen(f'sudo timedatectl set-timezone {args["Timezone"]}').read()
+            data = os.popen(f'sudo timedatectl set-timezone {args["Timezone"]}').read().strip()
         except Exception as e:
             status = 201
             message = 'error'
