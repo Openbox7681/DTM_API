@@ -108,15 +108,15 @@ class NetworkService(Resource):
         message = 'success'
         data = [
             {
-                'name': 'enp0s8',
-                'ip_address': '192.168.0.202',
-                'netmask': '255.255.255.0',
-                'mac': '08:00:27:66:ef:5a',
-                'trafic': {
-                    'max': 2000,
-                    'min': 100,
-                    'avg': 1400,
-                    'list': [
+                'Name': 'enp0s8',
+                'Ip': '192.168.0.202',
+                'Netmask': '255.255.255.0',
+                'Mac': '08:00:27:66:ef:5a',
+                'Trafic': {
+                    'Max': 2000,
+                    'Min': 100,
+                    'Average': 1400,
+                    'List': [
                         {'timestamp': 1641318528, 'flow': 200},
                         {'timestamp': 1641318528, 'flow': 100},
                         {'timestamp': 1641318528, 'flow': 600},
@@ -131,15 +131,15 @@ class NetworkService(Resource):
                 }
             },
             {
-                'name': 'enp0s9',
-                'ip_address': '192.168.0.203',
-                'netmask': '255.255.255.0',
-                'mac': '08:00:27:8b:76:f3',
-                'trafic': {
-                    'max': 2000,
-                    'min': 100,
-                    'avg': 1400,
-                    'list': [
+                'Name': 'enp0s9',
+                'Ip': '192.168.0.203',
+                'Netmask': '255.255.255.0',
+                'Mac': '08:00:27:8b:76:f3',
+                'Trafic': {
+                    'Max': 2000,
+                    'Min': 100,
+                    'Average': 1400,
+                    'List': [
                         {'timestamp': 1641318528, 'flow': 200},
                         {'timestamp': 1641318528, 'flow': 100},
                         {'timestamp': 1641318528, 'flow': 600},
@@ -169,7 +169,7 @@ class NTPService(Resource):
         status = 200
         message = 'success'
         data = {
-            'ntp_list': [
+            'NtpList': [
                 'pool 0.ubuntu.pool.ntp.org iburst',
                 'pool 1.ubuntu.pool.ntp.org iburst',
                 'pool 2.ubuntu.pool.ntp.org iburst',
