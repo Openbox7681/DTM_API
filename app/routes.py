@@ -1,7 +1,7 @@
 import logging.config
 from app import api
 from app.controller.LoginController import Login, Users, Refresh
-from app.controller.NetworkController import RebootService, TimezoneService, NetworkService, NTPService
+from app.controller.NetworkController import RebootService, TimezoneService, NetworkService, NTPService, ShutdownService
 from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
@@ -220,6 +220,10 @@ api.add_resource(GetSuricataLog, '/log/suricata', resource_class_kwargs={
 
 api.add_resource(RebootService, '/service/reboot', resource_class_kwargs={
     'logger': logging.getLogger('/service/reboot')
+})
+
+api.add_resource(ShutdownService, '/service/shutdown', resource_class_kwargs={
+    'logger': logging.getLogger('/service/shutdown')
 })
 
 api.add_resource(TimezoneService, '/service/timezone', resource_class_kwargs={
