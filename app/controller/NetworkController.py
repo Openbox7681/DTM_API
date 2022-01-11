@@ -192,10 +192,10 @@ class NTPService(Resource):
         try:
             with open('/etc/ntp.conf', 'w') as f:
                 f.write(newFile)
-
+            
             status = 200
             message = 'success'
-            data = ''
+            data = os.popen('sudo service ntp restart').read()
         except Exception as e:
             status = 201
             message = 'error'
