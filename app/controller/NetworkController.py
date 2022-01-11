@@ -168,14 +168,39 @@ class NTPService(Resource):
     def get(self):
         status = 200
         message = 'success'
+        file = os.popen('cat /etc/ntp.conf').read()
+        NtpContent = file.split('# more information.')[-1].split('# Use Ubuntu\'s ntp server as a fallback.')[0].strip()
         data = {
-            'NtpList': [
-                'pool 0.ubuntu.pool.ntp.org iburst',
-                'pool 1.ubuntu.pool.ntp.org iburst',
-                'pool 2.ubuntu.pool.ntp.org iburst',
-                'pool 3.ubuntu.pool.ntp.org iburst',
-            ]
+            'NtpContent': NtpContent
         }
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data,
+        })
+
+    def post(self):
+        args = reqparse.RequestParser() \
+            .add_argument('NtpContent', type=str, location='json', required=True) \
+            .parse_args()
+
+        NtpContent = args['NtpContent']
+
+        file = os.popen('cat /etc/ntp.conf').read()
+        newFile = f"{file.split('# more information.')[0]}# more information.\n{NtpContent}\n# Use Ubuntu{file.split('# Use Ubuntu')[-1]}"
+
+        try:
+            with open('/etc/ntp.conf', 'w') as f:
+                f.write(newFile)
+
+            status = 200
+            message = 'success'
+            data = ''
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
         return jsonify({
             "Status": status,
             "Message": message,
