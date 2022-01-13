@@ -7,6 +7,18 @@ import os
 from app import jwt
 
 
+binaryMap = {
+    '255': 8,
+    '254': 7,
+    '252': 6,
+    '248': 5,
+    '240': 4,
+    '224': 3,
+    '192': 2,
+    '128': 1,
+    '0': 0,
+}
+
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
     return jsonify({
@@ -14,6 +26,16 @@ def expired_token_callback(jwt_header, jwt_payload):
         'message': "token expired"
         # 'msg' : jwt_payload
     })
+
+
+def maskToInt(mask):
+    try:
+        count = 0
+        for binary in mask.split('.'):
+            count += binaryMap[binary]
+    except:
+        raise Exception(f'wrong mask number: {binary}')
+    return count
 
 
 class RebootService(Resource):
@@ -104,105 +126,112 @@ class NetworkService(Resource):
         self.logger = kwargs.get('logger')
 
     def get(self):
-        networkMap = {}
-        # get dns list
-        dnsBlocks = os.popen('systemd-resolve --status').read().split('\n\n')
-        for dnsNetwork in dnsBlocks:
-            if not dnsNetwork.startswith('Link'):
-                continue
-            lines = dnsNetwork.split('\n')
-            name = lines[0].split('(')[1].split(')')[0]
-            networkMap[name] = {}
-            networkMap[name]['DNS'] = []
-            for dns in dnsNetwork.split('DNS Servers:')[1].split('\n'):
-                networkMap[name]['DNS'].append(dns.strip())
+        try:
+            networkMap = {}
+            # get dns list
+            dnsBlocks = os.popen('systemd-resolve --status').read().split('\n\n')
+            for dnsNetwork in dnsBlocks:
+                if not dnsNetwork.startswith('Link'):
+                    continue
+                lines = dnsNetwork.split('\n')
+                name = lines[0].split('(')[1].split(')')[0]
+                networkMap[name] = {}
+                networkMap[name]['DNS'] = []
+                for dns in dnsNetwork.split('DNS Servers:')[1].split('\n'):
+                    networkMap[name]['DNS'].append(dns.strip())
 
-        # get gateway
-        gatewayBlocks = os.popen('nmcli dev show').read().split('\n\n')
-        for gatewayLines in gatewayBlocks:
-            for line in gatewayLines.split('\n'):
-                if 'GENERAL.DEVICE' in line:
-                    name = line.split(' ')[-1]
-                if 'IP4.GATEWAY' in line and name in networkMap:
-                    gateway = line.split(' ')[-1]
-                    networkMap[name]['Gateway'] = gateway
+            # get gateway
+            gatewayBlocks = os.popen('nmcli dev show').read().split('\n\n')
+            for gatewayLines in gatewayBlocks:
+                for line in gatewayLines.split('\n'):
+                    if 'GENERAL.DEVICE' in line:
+                        name = line.split(' ')[-1]
+                    if 'IP4.GATEWAY' in line and name in networkMap:
+                        gateway = line.split(' ')[-1]
+                        networkMap[name]['Gateway'] = gateway
 
-        # get network info
-        networkList = []
-        ifconfig = os.popen('ifconfig').read().strip().split('\n\n')
-        for networkString in ifconfig:
-            network = {}
-            lines = networkString.split('\n')
-            network['Name'] = lines[0].split(':')[0]
-            if network['Name'] == 'lo':
-                continue
-            secondLines = lines[1].strip().split(' ')
-            network['Ip'] = secondLines[1]
-            network['Netmask'] = secondLines[4]
-            network['Mac'] = lines[3].strip().split(' ')[1]
-            network['DNS'] = networkMap[network['Name']]['DNS']
-            network['Gateway'] = networkMap[network['Name']]['Gateway']
-            networkList.append(network)
+            # get network info
+            networkList = []
+            ifconfig = os.popen('ifconfig').read().strip().split('\n\n')
+            for networkString in ifconfig:
+                network = {}
+                lines = networkString.split('\n')
+                network['Name'] = lines[0].split(':')[0]
+                if network['Name'] == 'lo':
+                    continue
+                secondLines = lines[1].strip().split(' ')
+                network['Ip'] = secondLines[1]
+                network['Netmask'] = secondLines[4]
+                network['Mac'] = lines[3].strip().split(' ')[1]
+                network['DNS'] = networkMap[network['Name']]['DNS']
+                network['Gateway'] = networkMap[network['Name']]['Gateway']
+                networkList.append(network)
 
-
-        status = 200
-        message = 'success'
-        data = networkList
-        # data = [
-        #     {
-        #         'Name': 'enp0s8',
-        #         'Ip': '192.168.0.202',
-        #         'Netmask': '255.255.255.0',
-        #         'Mac': '08:00:27:66:ef:5a',
-        #         'DNS': [''],
-        #         'Gateway': '',
-        #         'Trafic': {
-        #             'Max': 2000,
-        #             'Min': 100,
-        #             'Average': 1400,
-        #             'List': [
-        #                 {'timestamp': 1641318528, 'flow': 200},
-        #                 {'timestamp': 1641318528, 'flow': 100},
-        #                 {'timestamp': 1641318528, 'flow': 600},
-        #                 {'timestamp': 1641318528, 'flow': 800},
-        #                 {'timestamp': 1641318528, 'flow': 2000},
-        #                 {'timestamp': 1641318528, 'flow': 1800},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #             ]
-        #         }
-        #     },
-        #     {
-        #         'Name': 'enp0s9',
-        #         'Ip': '192.168.0.203',
-        #         'Netmask': '255.255.255.0',
-        #         'Mac': '08:00:27:8b:76:f3',
-        #         'Trafic': {
-        #             'Max': 2000,
-        #             'Min': 100,
-        #             'Average': 1400,
-        #             'List': [
-        #                 {'timestamp': 1641318528, 'flow': 200},
-        #                 {'timestamp': 1641318528, 'flow': 100},
-        #                 {'timestamp': 1641318528, 'flow': 600},
-        #                 {'timestamp': 1641318528, 'flow': 800},
-        #                 {'timestamp': 1641318528, 'flow': 2000},
-        #                 {'timestamp': 1641318528, 'flow': 1800},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #                 {'timestamp': 1641318528, 'flow': 1600},
-        #             ]
-        #         }
-        #     }
-        # ]
+            status = 200
+            message = 'success'
+            data = networkList
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
         return jsonify({
             "Status": status,
             "Message": message,
             "Data": data,
         })
+
+    def post(self):
+        try:
+            args = reqparse.RequestParser() \
+                .add_argument('Interface', type=str, location='json', required=True) \
+                .add_argument('Ip', type=str, location='json', required=True) \
+                .add_argument('Netmask', type=str, location='json', required=True) \
+                .add_argument('DNS', type=str, location='json', required=True) \
+                .parse_args()
+            name = args['Interface']
+            ip = args['Ip']
+            mask = args['Netmask']
+            dns = args['DNS']
+
+            newLines = []
+            netplanLines = os.popen('cat /etc/netplan/*.yaml').read().split('\n')
+            findNextInterface = False
+            for line in netplanLines:
+                if findNextInterface and 'version' not in line:
+                    if line.startswith('    ') and (not line.startswith('      ')):
+                        findNextInterface = False
+                    else:
+                        continue
+                if name in line:
+                    findNextInterface = True
+                    newLines.append(f'    {name}:')
+                    newLines.append(f'      addresses: [{ip}/{maskToInt(mask)}]')
+                    newLines.append( '      nameservers:')
+                    newLines.append(f'        addresses: [{dns}]')
+                    newLines.append(f'      dhcp4: false')
+                else:
+                    newLines.append(line)
+
+            newFile = '\n'.join(newLines)
+            with open('/etc/netplan/*.yaml', 'w') as f:
+                f.write(newFile)
+
+            os.popen('sudo netplan apply')
+            
+            status = 200
+            message = 'success'
+            data = 'set network ok'
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data,
+        })
+
 
 
 class NTPService(Resource):
