@@ -134,6 +134,8 @@ class NetworkService(Resource):
             network = {}
             lines = networkString.split('\n')
             network['Name'] = lines[0].split(':')[0]
+            if network['Name'] == 'lo':
+                continue
             secondLines = lines[1].strip().split(' ')
             network['Ip'] = secondLines[1]
             network['Netmask'] = secondLines[4]
