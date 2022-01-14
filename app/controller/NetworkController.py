@@ -3,8 +3,10 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
 import os
+import json
 
 from app import jwt
+from datetime import timedelta, datetime
 
 
 binaryMap = {
@@ -148,7 +150,36 @@ class NetworkService(Resource):
                         name = line.split(' ')[-1]
                     if 'IP4.GATEWAY' in line and name in networkMap:
                         gateway = line.split(' ')[-1]
-                        networkMap[name]['Gateway'] = gateway
+                        if name in networkMap:
+                            networkMap[name]['Gateway'] = gateway
+
+            # get traffic
+            vnstat = json.loads(os.popen('vnstat --json').read())
+            interfaces = vnstat['interfaces']
+            for interface in interfaces:
+                name = interface['id']
+                date = interface['updated']['date']
+                time = interface['updated']['time']
+                startTime = datetime(year=date['year'], month=date['month'], day=date['day'], hour=time['hour']) \
+                            + timedelta(days=-1)
+                if name in networkMap:
+                    networkMap[name]['Traffic'] = {}
+                    networkMap[name]['Traffic']['FlowList'] = []
+                    hourOffset, minFlow, maxFlow = 0, 9999999, -1
+                    sum = 0
+                    for hour in interface['traffic']['hours']:
+                        traffic = {'rx': hour['rx'], 'tx': hour['tx'], 'time': startTime+timedelta(hours=hourOffset)}
+                        if minFlow > traffic['rx']:
+                            minDate = traffic['time']
+                            minFlow = traffic['rx']
+                        if maxFlow < traffic['rx']:
+                            maxDate = traffic['time']
+                            maxFlow = traffic['rx']
+                        networkMap[name]['Traffic']['FlowList'].append(traffic)
+                        sum += traffic['rx']
+                        hourOffset += 1
+                    networkMap[name]['Traffic']['MinFlow'] = \
+                        {'MinRx': minFlow, 'MinDate': minDate, 'MaxRx': maxFlow, 'MaxDate': maxDate, 'AvgRx': sum/24}
 
             # get network info
             networkList = []
@@ -165,6 +196,7 @@ class NetworkService(Resource):
                 network['Mac'] = lines[3].strip().split(' ')[1]
                 network['DNS'] = networkMap[network['Name']]['DNS']
                 network['Gateway'] = networkMap[network['Name']]['Gateway']
+                network['Traffic'] = networkMap[network['Name']]['Traffic']
                 networkList.append(network)
 
             status = 200
@@ -217,7 +249,7 @@ class NetworkService(Resource):
                 f.write(newFile)
 
             os.popen('sudo netplan apply')
-            
+
             status = 200
             message = 'success'
             data = 'set network ok'
@@ -231,7 +263,6 @@ class NetworkService(Resource):
             "Message": message,
             "Data": data,
         })
-
 
 
 class NTPService(Resource):
