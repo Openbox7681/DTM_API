@@ -179,7 +179,7 @@ class NetworkService(Resource):
                         sum += traffic['rx']
                         hourOffset += 1
                     networkMap[name]['Traffic']['MinFlow'] =  {'MinRx': minFlow, 'MinDate': minDate}
-                    networkMap[name]['Traffic']['MinFlow'] = {'MaxRx': maxFlow, 'MaxDate': maxDate}
+                    networkMap[name]['Traffic']['MaxFlow'] = {'MaxRx': maxFlow, 'MaxDate': maxDate}
                     networkMap[name]['Traffic']['AvgRx'] = sum/24
 
             # get network info
