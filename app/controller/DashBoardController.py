@@ -74,6 +74,9 @@ class GetDetection(Resource):
                     continue
                 if 'address-groups' in line:
                     doReplace = True
+                newLines.append(line)
+
+            print(newLines)
             with open('/etc/suricata/suricata.yaml', 'w') as f:
                 f.write('\n'.join(newLines))
             status = 200
