@@ -311,3 +311,41 @@ class NTPService(Resource):
             "Message": message,
             "Data": data,
         })
+
+
+class DTMService(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+
+    def get(self):
+        status = 200
+        message = 'success'
+        file = os.popen('cat /etc/ntp.conf').read()
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": file,
+        })
+
+    def post(self):
+        args = reqparse.RequestParser() \
+            .add_argument('DTMContent', type=str, location='json', required=True) \
+            .parse_args()
+        newFile = args['DTMContent']
+        try:
+            with open('/etc/ntp.conf', 'w') as f:
+                f.write(newFile)
+
+            status = 200
+            message = 'success'
+            data = os.popen('sudo service ntp restart').read()
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data,
+        })

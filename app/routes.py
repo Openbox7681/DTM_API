@@ -237,3 +237,7 @@ api.add_resource(NetworkService, '/service/network', resource_class_kwargs={
 api.add_resource(NTPService, '/service/ntp', resource_class_kwargs={
     'logger': logging.getLogger('/service/ntp')
 })
+
+api.add_resource(DTMService, '/service/dtm', resource_class_kwargs={
+    'logger': logging.getLogger('/service/dtm')
+})
