@@ -69,7 +69,7 @@ class GetDetection(Resource):
             doReplace = False
             for line in lines:
                 if doReplace:
-                    newLines.append(f'    HOME_NET: {detection}')
+                    newLines.append(f'    HOME_NET: "{detection}"')
                     doReplace = False
                     continue
                 if 'address-groups' in line:
