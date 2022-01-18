@@ -320,7 +320,7 @@ class DTMService(Resource):
     def get(self):
         status = 200
         message = 'success'
-        file = os.popen('cat /etc/ntp.conf').read()
+        file = os.popen('cat /etc/dtm/build/dtm.config').read()
         return jsonify({
             "Status": status,
             "Message": message,
@@ -333,7 +333,7 @@ class DTMService(Resource):
             .parse_args()
         newFile = args['DTMContent']
         try:
-            with open('/etc/ntp.conf', 'w') as f:
+            with open('/etc/dtm/build/dtm.config', 'w') as f:
                 f.write(newFile)
 
             status = 200
