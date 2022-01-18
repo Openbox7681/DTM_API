@@ -74,7 +74,7 @@ class GetDetection(Resource):
                     continue
                 if 'address-groups' in line:
                     doReplace = True
-            with open('/etc/dtm/build/dtm.config', 'w') as f:
+            with open('/etc/suricata/suricata.yaml', 'w') as f:
                 f.write('\n'.join(newLines))
             status = 200
             message = 'success'
