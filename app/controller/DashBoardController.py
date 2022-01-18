@@ -35,7 +35,7 @@ class GetCpuInfo(Resource):
 class GetDetection(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')
-    @jwt_required()
+    # @jwt_required()
     def get(self):
         message = None
         status = None
@@ -67,7 +67,7 @@ class GetDetection(Resource):
             lines = os.popen('cat /etc/suricata/suricata.yaml').read().split('\n')
             newLines = []
             doReplace = False
-            for line in newLines:
+            for line in lines:
                 if doReplace:
                     newLines.append(f'    HOME_NET: {detection}')
                     doReplace = False
