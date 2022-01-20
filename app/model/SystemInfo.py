@@ -52,6 +52,10 @@ def enableService(serviceName):
                 job.enable()
                 my_user_cron.write()
                 return True
+        elif serviceName == 'suricata.service' or serviceName == 'ntp.service':
+            cmd = f'sudo /lib/systemd/systemd-sysv-install enable {serviceName.split(".")[0]}'
+            sshServiceStatus = os.popen(cmd)
+            return True
         else:
             cmd = 'sudo systemctl enable ' + serviceName
             sshServiceStatus = os.popen(cmd)
@@ -59,6 +63,7 @@ def enableService(serviceName):
     except Exception as e:
         print(e)
         return False
+
 
 def disableService(serviceName):
     response = dict()
@@ -76,6 +81,10 @@ def disableService(serviceName):
                 job.enable(False)
                 my_user_cron.write()
                 return True
+        elif serviceName == 'suricata.service' or serviceName == 'ntp.service':
+            cmd = f'sudo /lib/systemd/systemd-sysv-install disable {serviceName.split(".")[0]}'
+            sshServiceStatus = os.popen(cmd)
+            return True
         else:
             
             cmd = 'sudo systemctl disable ' + serviceName
