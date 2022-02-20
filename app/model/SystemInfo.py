@@ -142,7 +142,7 @@ def getAllServiceStatus():
         "SshServiceIsAuto" : 'enabled' in sshServiceIsAuto,
         "TdAgentServiceIsActive" : 'running' in tdAgentServiceStatus,
         "TdAgentServiceIsAuto" : 'enabled' in tdAgentServiceIsAuto,
-        "SuricateServiceIsActive" : 'dead' not in suricateServiceStatus,
+        "SuricateServiceIsActive" : 'failed' not in suricateServiceStatus,
         "SuricateServiceIsAuto" : 'enabled' in suricateServiceIsAuto,
         "NtpServiceIsActive" : 'running' in ntpServiceStatus,
         "NtpServiceIsAuto" : 'enabled' in ntpServiceIsAuto,
