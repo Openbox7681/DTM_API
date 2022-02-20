@@ -303,7 +303,7 @@ def getNetworkRate(num):
 
 
 def get_suricata_log(size):
-    cmd = 'tail -' +  str(size) + ' /var/log/suricata/fast.log'
+    cmd = 'tail -' +  str(size) + ' /var/log/suricata/suricata.log'
     loglines = os.popen(cmd).readlines()
     response = list()
     for log in loglines:
