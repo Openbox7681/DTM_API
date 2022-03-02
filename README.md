@@ -50,3 +50,11 @@ if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
     #修改以上設定即可更換port
 ```
+
+
+### 網卡監控套件安裝
+```
+sudo apt-get install network-manager
+sudo apt-get install vnstat
+sudo vnstat -i {{欲監控網卡}} -u
+```
