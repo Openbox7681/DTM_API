@@ -58,3 +58,8 @@ sudo apt-get install network-manager
 sudo apt-get install vnstat
 sudo vnstat -i {{欲監控網卡}} -u
 ```
+
+### 取得Port號資訊需要安裝nmap套件
+```
+sudo apt-get install nmap
+```

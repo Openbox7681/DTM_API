@@ -5,6 +5,7 @@ import time
 import os 
 import json
 from crontab import CronTab
+import nmap
 
 #取得Inbound 資訊
 def get_bound_info():
@@ -360,3 +361,26 @@ def get_dtm_log(size):
         }
         response.append(res)
     return response
+
+
+def get_portinfo():
+    response = list()
+    nm = nmap.PortScanner()
+    
+    portinfo = nm.scan(hosts='localhost', arguments='-sT')
+    
+    portinfo = portinfo['scan']['127.0.0.1']['tcp']
+    
+    openPort = portinfo.keys()
+    
+    for portNumber in openPort:
+        res = dict()
+        res = {
+            "Port" : portNumber,
+            "ServiceName" : portinfo[portNumber]['name'],
+            "State" : portinfo[portNumber]["state"]     
+        }
+        response.append(res)
+    
+    return response
+ 

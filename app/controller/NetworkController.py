@@ -8,6 +8,7 @@ import json
 from app import jwt
 from datetime import timedelta, datetime
 
+import app.model.SystemInfo as system
 
 binaryMap = {
     '255': 8,
@@ -83,7 +84,29 @@ class ShutdownService(Resource):
             "Data": data,
         })
 
+class GetPortInfo(Resource):
+    def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger')
+    @jwt_required()
+    def get(self):
+        message = None
+        status = None
+        data = dict()
+        try : 
+            status = 200
+            message = 'success'
+            data = system.get_portinfo()
+        except Exception as e:
+            status = 201
+            message = 'error'
+            data = str(e)
 
+
+        return jsonify({
+            "Status": status,
+            "Message": message,
+            "Data": data
+        })
 class TimezoneService(Resource):
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger')

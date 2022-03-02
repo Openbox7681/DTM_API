@@ -2,7 +2,7 @@ import logging.config
 from app import api
 from app.controller.LoginController import Login, Users, Refresh
 from app.controller.NetworkController import RebootService, TimezoneService, NetworkService, NTPService, \
-    ShutdownService, DTMService
+    ShutdownService, DTMService, GetPortInfo
 from app.controller.RoleController import QueryRole, QueryRoleById, CreateRole, UpdateRole, DeleteRole
 from app.controller.UserController import QueryUser, QueryUserById, CreateUser, UpdateUser, DeleteUser
 from app.controller.FormController import QueryForm, QueryFormById, CreateForm, UpdateForm, DeleteForm
@@ -242,3 +242,8 @@ api.add_resource(NTPService, '/service/ntp', resource_class_kwargs={
 api.add_resource(DTMService, '/service/dtm', resource_class_kwargs={
     'logger': logging.getLogger('/service/dtm')
 })
+
+api.add_resource(GetPortInfo, '/service/portInfo', resource_class_kwargs={
+    'logger': logging.getLogger('/service/dtm')
+})
+

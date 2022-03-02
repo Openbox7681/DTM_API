@@ -8,3 +8,4 @@ dnspython
 psutil
 Flask-Bcrypt
 python-crontab
+python-nmap
